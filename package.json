@@ -11,18 +11,18 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
-    "@emotion/react": "11.11.4",
-    "@emotion/styled": "11.11.5",
+    "@emotion/react": "11.13.5",
+    "@emotion/styled": "11.13.5",
     "@sentry/nextjs": "^8.42.0",
-    "@theme-ui/color": "0.16.2",
-    "@types/node": "20.12.8",
-    "@types/react": "18.3.1",
-    "@types/react-dom": "18.3.0",
+    "@theme-ui/color": "0.17.1",
+    "@types/node": "22.10.1",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
     "axios": "1.7.8",
-    "date-fns": "3.6.0",
+    "date-fns": "4.1.0",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",
-    "framer-motion": "11.1.7",
+    "framer-motion": "11.13.1",
     "next": "15.0.3",
     "next-translate": "^2.6.2",
     "next-translate-plugin": "^2.6.2",
@@ -34,7 +34,7 @@
     "theme-ui": "0.17.1",
     "typescript": "5.4.5",
     "usehooks-ts": "3.1.0",
-    "zustand": "4.5.2"
+    "zustand": "4.5.5"
   },
   "devDependencies": {
     "eslint-plugin-adonis": "^2.1.1",
