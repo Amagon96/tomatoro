@@ -82,6 +82,10 @@ export const LINKS = {
   SONGBOX: 'https://songbox.io',
   GATOLINERO: 'https://t.me/GatolineroBot',
   MITRABAJO: 'https://eslegalmitrabajo.com',
+  REGISTER: '/register',
+  LOGIN: '/login',
+  DASHBOARD: '/dashboard',
+  LOGOUT: '/api/auth/logout',
 }
 
 export const CMS_URL = 'https://cms.tomatoro.com/api'

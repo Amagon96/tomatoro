@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
-import { GetServerSideProps } from 'next'
+import { User } from '@supabase/supabase-js'
+import { GetServerSideProps, type GetServerSidePropsContext } from 'next'
 import React from 'react'
 import { Box, Divider, Grid } from 'theme-ui'
 
@@ -14,25 +15,32 @@ import { WhoUses } from '~/components/templates/who-uses'
 import { useSettingsStore } from '~/stores/settings'
 import { useTimerStore } from '~/stores/time'
 import { getBanners } from '~/utils/cms.api'
+import { createClient } from '~/utils/supabase/server-props'
 import { formatTime } from '~/utils/timer.utils'
 
-export const getServerSideProps: GetServerSideProps<{}> = async () => {
+export async function getServerSideProps (context: GetServerSidePropsContext) {
   try {
+    // Retrieve the user, if authenticated
+    const supabase = createClient(context)
+    const { data } = await supabase.auth.getUser()
+
+    // Retrieve banners for the home page
     const banners = await getBanners('home')
-    return { props: { banners } }
+
+    return { props: { banners, user: data?.user } }
   } catch (e) {
     Sentry.captureException(e)
     return { props: { banners: [] } }
   }
 }
 
-export default function Home ({ banners }: { banners: Banner[] }) {
+export default function Home ({ banners, user }: { banners: Banner[], user: User | null }) {
   const [isStarted, time] = useTimerStore(state => [state.isStarted, state.time])
   const showTimer = useSettingsStore(state => state.showTimer)
   const title = showTimer && isStarted ? formatTime(time) : undefined
 
   return (
-    <Page subtitle={ title } banners={ banners }>
+    <Page user={user} subtitle={ title } banners={ banners }>
       <Box pt={ 4 } pb={ 5 }>
         <NotificationsWarn/>
         <TimerWithSelector/>

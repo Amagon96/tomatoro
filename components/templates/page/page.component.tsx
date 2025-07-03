@@ -1,3 +1,4 @@
+import { User } from '@supabase/supabase-js'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { FC, useMemo } from 'react'
@@ -12,6 +13,7 @@ import { Header } from '~/components/organisms/header'
 import { SEO, VERSION } from '~/utils/config'
 
 interface PageProps {
+  user?: User | null
   banners?: Banner[]
   children: React.ReactNode
   subtitle?: string
@@ -36,6 +38,7 @@ export const Page: FC<PageProps> = ({
   isWrapped,
   seo,
   subtitle,
+  user,
 }) => {
   const isClient = useIsClient()
   const { asPath } = useRouter()
@@ -104,7 +107,7 @@ export const Page: FC<PageProps> = ({
       {/* Warning appears only in client. It might cause issues with SSR */ }
       { isClient && shouldShowUnstableWarning(origin) && (<UnstableWarning/>) }
 
-      <Header/>
+      <Header user={user} />
 
       {/* Banners appears only in client. It might cause issues with SSR */ }
       { isClient && banners && <Banners banners={ banners }/> }

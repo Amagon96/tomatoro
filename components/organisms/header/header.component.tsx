@@ -1,3 +1,4 @@
+import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -25,7 +26,11 @@ const menuVariants = {
   },
 }
 
-export const Header = () => {
+interface HeaderProps {
+  user?: User | null
+}
+
+export const Header = ({user}: HeaderProps) => {
   const { locale = 'en' } = useRouter()
   const { t } = useTranslation('common')
   const { setFalse, setTrue, value } = useBoolean(false)
@@ -33,10 +38,21 @@ export const Header = () => {
   // @ts-ignore
   const pagesForLocale = PAGES[locale]
 
+  const anonItems = [
+    { key: 'register', href: LINKS.REGISTER },
+    { key: 'login', href: LINKS.LOGIN },
+  ]
+
+  const userItems = [
+    { key: 'dashboard', href: LINKS.DASHBOARD },
+    { key: 'logout', href: LINKS.LOGOUT },
+  ]
+
   const menuItems = [
     { key: 'home', href: LINKS.HOME },
     { key: 'howItWorks', href: pagesForLocale.HOW_IT_WORKS },
     { key: 'contact', href: pagesForLocale.CONTACT },
+    ...(user ? userItems : anonItems),
   ]
 
   return (
