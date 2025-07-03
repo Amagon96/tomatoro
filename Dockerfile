@@ -3,7 +3,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN  npm install
+RUN  pnpm install
 
 FROM node:18-alpine AS builder
 WORKDIR /app
@@ -17,7 +17,7 @@ ARG NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_CMS_API_KEY=$NEXT_PUBLIC_CMS_API_KEY
 ARG SENTRY_DSN=$SENTRY_DSN
 
-RUN npm run build
+RUN pnpm run build
 
 FROM node:18-alpine AS runner
 WORKDIR /app
@@ -47,4 +47,4 @@ EXPOSE 80
 
 ENV PORT 80
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]

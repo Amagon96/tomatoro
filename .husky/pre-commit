@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lint &&
-npm run test &&
-npm --no-git-tag-version version patch && git add .
+pnpm run lint &&
+pnpm run test &&
+pnpm --no-git-tag-version version patch && git add .
