@@ -7,7 +7,7 @@ export default function PublicPage ({ data }: { data?: any[] }) {
 export async function getStaticProps () {
   const supabase = createClient()
 
-  const { data, error } = await supabase.from('colors').select()
+  const { data, error } = await supabase.from('todos').select()
 
   if (error || !data) {
     return { props: {} }
