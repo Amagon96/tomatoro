@@ -12,6 +12,7 @@ import {
   NotificationsProvider,
 } from '~/contexts/notifications/notifications-context.provider'
 import { TimerProvider } from '~/contexts/timer'
+import { UsersProvider } from '~/contexts/user'
 import { useIntervalsStore } from '~/stores/intervals'
 import { init, trackEvent } from '~/utils/analytics'
 
@@ -84,13 +85,15 @@ export default function App ({ Component, pageProps }: AppProps) {
   return (
     <PostHogProvider client={ Posthog }>
       <ThemeUIProvider theme={ getTheme(theme) }>
-        <NotificationsProvider>
-          <TimerProvider>
-            { globalStyles }
-            {/* @ts-ignore */ }
-            <Component { ...pageProps } />
-          </TimerProvider>
-        </NotificationsProvider>
+        <UsersProvider>
+          <NotificationsProvider>
+            <TimerProvider>
+              { globalStyles }
+              {/* @ts-ignore */ }
+              <Component { ...pageProps } />
+            </TimerProvider>
+          </NotificationsProvider>
+        </UsersProvider>
       </ThemeUIProvider>
     </PostHogProvider>
   )

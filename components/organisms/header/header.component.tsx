@@ -1,4 +1,3 @@
-import { User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -8,6 +7,7 @@ import { Close, Flex, Grid, MenuButton, NavLink, Text } from 'theme-ui'
 import { useBoolean } from 'usehooks-ts'
 
 import { LanguageSelector } from '~/components/molecules/language-selector'
+import { useUserContext } from '~/contexts/user'
 import logoTomatoro from '~/public/svg/logo-tomatoro.svg'
 import { LINKS, PAGES } from '~/utils/config'
 
@@ -26,14 +26,11 @@ const menuVariants = {
   },
 }
 
-interface HeaderProps {
-  user?: User | null
-}
-
-export const Header = ({user}: HeaderProps) => {
+export const Header = () => {
   const { locale = 'en' } = useRouter()
   const { t } = useTranslation('common')
   const { setFalse, setTrue, value } = useBoolean(false)
+  const { user } = useUserContext()
 
   // @ts-ignore
   const pagesForLocale = PAGES[locale]
