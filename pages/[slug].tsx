@@ -51,6 +51,8 @@ export default function PageBySlug ({ banners, post }: { post: CmsPageEntry, ban
   const isClient = useIsClient()
   const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
   const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
+  const userActivity = posthog.isFeatureEnabled('user-activity')
+  console.log('[DEBUG] userActivity', userActivity)
 
   if (!post) {
     return null
