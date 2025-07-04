@@ -49,8 +49,8 @@ export const getStaticProps: GetStaticProps<
 
 export default function PageBySlug ({ banners, post }: { post: CmsPageEntry, banners: Banner[] }) {
   const isClient = useIsClient()
-  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget') || true
-  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget') || true
+  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
+  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
 
   if (!post) {
     return null
