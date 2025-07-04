@@ -56,11 +56,6 @@ export default function App ({ Component, pageProps }: AppProps) {
 
     if (router.isReady) {
       router.push(url, undefined, { shallow: true }).then()
-
-      // const utmSource = query.utm_source
-      // if (utmSource) {
-      //   console.log(utmSource)
-      // }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
