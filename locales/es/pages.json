@@ -9,6 +9,7 @@
     "cta": "Iniciar sesión"
   },
   "dashboard": {
-    "title": "Hola, {{name}}!"
+    "title": "Panel de control",
+    "greeting": "Hola, {{name}}!"
   }
 }

@@ -9,6 +9,7 @@
     "cta": "Login"
   },
   "dashboard": {
-    "title": "Hello, {{name}}!"
+    "title": "Dashboard",
+    "greeting": "Hello, {{name}}!"
   }
 }

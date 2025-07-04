@@ -55,12 +55,17 @@ export const defaultTheme: Theme = {
       textAlign: 'left',
       lineHeight: '1.5em',
     },
+    muted: {
+      color: 'muted',
+      fontFamily: 'body',
+    },
   },
   colors: {
     contrastText: '#fff',
     textHighEmphasis: rgba('#000', 0.87),
     textMediumEmphasis: rgba('#000', 0.6),
     textLowEmphasis: rgba('#000', 0.38),
+    muted: rgba('#000', 0.15),
     background: '#fff',
     primary: '#DA3B1B',
     yellow: '#eab440',

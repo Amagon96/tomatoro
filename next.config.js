@@ -59,8 +59,8 @@ const nextConfig = {
         locale: false,
       },
       {
-        source: '/es/dashboard',
-        destination: '/es/panel',
+        source: '/es/panel',
+        destination: '/es/dashboard',
         permanent: true,
         locale: false,
       },

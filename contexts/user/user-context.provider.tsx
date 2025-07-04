@@ -3,12 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SegmentType } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
-import { createSegment, retrieveWeeklyReport, WeelyReport } from '~/utils/supabase/queries/segments.query'
+import { createSegment } from '~/utils/supabase/queries/segments.query'
 
 export const UserContext = React.createContext<{
   user?: User | null
   reportSegment(type: SegmentType): void
-  getWeeklyReport(): Promise<WeelyReport | undefined>
 } | undefined>(undefined)
 
 export const useUserContext = () => {
@@ -40,14 +39,9 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
     await createSegment(context, type)
   }, [context])
 
-  const getWeeklyReport = useCallback(async () => {
-    return await retrieveWeeklyReport(context)
-  }, [context])
-
   const value = {
     user,
     reportSegment,
-    getWeeklyReport,
   }
 
   return (

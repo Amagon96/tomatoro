@@ -1,6 +1,7 @@
 import { SupabaseClient, User } from '@supabase/supabase-js'
-import { addDays, startOfWeek } from 'date-fns'
+import { eachDayOfInterval, endOfMonth, format, startOfMonth } from 'date-fns'
 
+import { Segment } from '~/@types/types.db'
 import { SegmentType } from '~/utils/config'
 
 interface SupabaseContext {
@@ -23,35 +24,40 @@ export async function createSegment (context: SupabaseContext, type: SegmentType
   }
 }
 
-export type WeelyReport = Array<{ day: string, segments: any[] }>
+export type WeeklyReport = Array<{
+  day: string,
+  segments: Array<Segment>
+}>
 
-export async function retrieveWeeklyReport (context: SupabaseContext) {
+export async function retrieveMonthlyReport (
+  context: SupabaseContext,
+  year = new Date().getFullYear(),
+  month = new Date().getMonth() // zero-indexed (0 = January)
+) {
   if (!context.user) {
     return
   }
 
-  const from = startOfWeek(new Date(), { weekStartsOn: 1 }) // monday
-  const to = addDays(from, 7)
+  const from = startOfMonth(new Date(year, month))
+  const to = endOfMonth(from)
 
   const { data, error } = await context.supabase
     .from('segments')
     .select('*')
+    .eq('user_id', context.user.id)
     .gte('created_at', from.toISOString())
-    .lt('created_at', to.toISOString())
-
-  const grouped = Array.from({ length: 7 }, (_, i) => {
-    const day = addDays(from, i).toISOString().slice(0, 10)
-    return {
-      day,
-      segments: data?.filter(seg =>
-        seg.created_at.startsWith(day)
-      ) || [],
-    }
-  })
+    .lte('created_at', to.toISOString())
 
   if (error) {
     throw error
   }
 
-  return grouped satisfies WeelyReport
+  const grouped: WeeklyReport = eachDayOfInterval({ start: from, end: to }).map(date => {
+    const day = format(date, 'yyyy-MM-dd')
+    const segments = (data ?? []).filter(seg => seg.created_at.startsWith(day))
+
+    return { day, segments }
+  })
+
+  return grouped
 }

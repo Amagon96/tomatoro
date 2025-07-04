@@ -5,7 +5,7 @@
     "*": ["common", "feedback", "subscribe"],
     "/news": ["pages"],
     "/login": ["pages"],
-    "/dashboard": ["pages"],
+    "/dashboard": ["pages", "activity"],
     "/": ["home", "timer"],
     "/about": ["about"]
   }
