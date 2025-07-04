@@ -25,6 +25,10 @@
       "home": "Home",
       "howItWorks": "How It Works",
       "contact": "Contact",
+      "register": "Create Account",
+      "login": "Login",
+      "dashboard": "Dashboard",
+      "logout": "Logout",
       "close": "Close Menu"
     }
   },

@@ -4,6 +4,8 @@
   "pages": {
     "*": ["common", "feedback", "subscribe"],
     "/news": ["pages"],
+    "/login": ["pages"],
+    "/dashboard": ["pages"],
     "/": ["home", "timer"],
     "/about": ["about"]
   }

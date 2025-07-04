@@ -1,5 +1,14 @@
 {
   "news": {
     "title": "News"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "cta": "Login"
+  },
+  "dashboard": {
+    "title": "Hello, {{name}}!"
   }
 }

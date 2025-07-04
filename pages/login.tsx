@@ -1,50 +1,75 @@
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import useTranslation from 'next-translate/useTranslation'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { Button, Flex, Grid, Heading, Input, Paragraph } from 'theme-ui'
 
+import { BackCta } from '~/components/atoms/back-cta'
+import { Page } from '~/components/templates/page'
 import { createClient } from '~/utils/supabase/component'
+
+type Inputs = {
+  email: string
+  password: string
+}
 
 export default function LoginPage () {
   const router = useRouter()
   const supabase = createClient()
+  const { t } = useTranslation('pages')
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<Inputs>()
 
-  async function logIn () {
+  async function logIn ({ email, password }: Inputs) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
+
     if (error) {
       console.error(error)
     }
+
     router.push('/dashboard')
   }
 
-  async function signUp () {
+  async function signUp ({ email, password }: Inputs) {
     const { error } = await supabase.auth.signUp({ email, password })
+
     if (error) {
       console.error(error)
     }
+
     router.push('/')
   }
 
   return (
-    <main>
-      <form>
-        <label htmlFor="email">Email:</label>
-        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="button" onClick={logIn}>
-          Log in
-        </button>
-        <button type="button" onClick={signUp}>
-          Sign up
-        </button>
-      </form>
-    </main>
+    <Page subtitle={ t('login.title') } isWrapped>
+      <Grid variant="contained" sx={ { justifyItems: 'start' } }>
+        <Heading as="h1">{ t('login.title') }</Heading>
+
+        <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(logIn) }>
+          <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
+            <Input
+              placeholder={ t('login.email') }
+              { ...register('email', { required: true }) }
+            />
+            { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+          </Flex>
+          <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
+            <Input
+              placeholder={ t('login.password') }
+              type="password"
+              { ...register('password', { required: true }) }
+            />
+            { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+          </Flex>
+          <Button type="submit">{ t('login.cta') }</Button>
+        </Flex>
+
+        <BackCta/>
+      </Grid>
+    </Page>
   )
 }

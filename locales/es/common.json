@@ -25,6 +25,10 @@
       "home": "Inicio",
       "howItWorks": "Cómo Funciona",
       "contact": "Contacto",
+      "register": "Crear cuenta",
+      "login": "Iniciar sesión",
+      "dashboard": "Panel de control",
+      "logout": "Cerrar sesión",
       "close": "Cerrar Menú"
     }
   },
