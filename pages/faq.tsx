@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
-import posthog from 'posthog-js'
 import React from 'react'
 import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
@@ -37,8 +36,6 @@ interface RouteProps {
 
 export default function Faq ({ page, questions }: RouteProps) {
   const isClient = useIsClient()
-  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
-  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
 
   if (!page) {
     return null
@@ -77,7 +74,7 @@ export default function Faq ({ page, questions }: RouteProps) {
             answer={ question.attributes.content }/>
         )) }
 
-        { isClient && isPageRatingWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <PageRating pageId={ slug }/>
           </Box>
@@ -85,7 +82,7 @@ export default function Faq ({ page, questions }: RouteProps) {
 
         <BackCta/>
 
-        { isClient && isSubscriptionWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <SubscribeWidget/>
           </Box>

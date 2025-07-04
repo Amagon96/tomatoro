@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
-import posthog from 'posthog-js'
 import React from 'react'
 import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
@@ -32,8 +31,6 @@ export const getServerSideProps: GetServerSideProps<
 
 export default function PostBySlug ({ post }: { post: CmsPageEntry }) {
   const isClient = useIsClient()
-  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
-  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
 
   if (!post) {
     return null
@@ -60,13 +57,13 @@ export default function PostBySlug ({ post }: { post: CmsPageEntry }) {
         } }>
         <Heading as="h1">{ post.attributes.title }</Heading>
         <RichTextRenderer content={ post.attributes.content }/>
-        { isClient && isPageRatingWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <PageRating pageId={ post.attributes.slug }/>
           </Box>
         ) }
         <BackCta/>
-        { isClient && isSubscriptionWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <SubscribeWidget/>
           </Box>

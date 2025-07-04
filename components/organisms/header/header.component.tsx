@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { FC } from 'react'
 import { Box, Flex, Button, MenuButton, Close, Text, NavLink } from 'theme-ui'
 import { useBoolean } from 'usehooks-ts'
@@ -18,8 +17,6 @@ export const Header = () => {
   const { t } = useTranslation('common')
   const { setFalse, setTrue, value } = useBoolean(false)
   const { user } = useUserContext()
-  const userActivity = useFeatureFlagEnabled('user-activity')
-  console.log('[DEBUG] userActivity', userActivity)
 
   // @ts-ignore
   const pagesForLocale = PAGES[locale]

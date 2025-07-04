@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetStaticProps } from 'next'
-import posthog from 'posthog-js'
 import React from 'react'
 import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
@@ -49,10 +48,6 @@ export const getStaticProps: GetStaticProps<
 
 export default function PageBySlug ({ banners, post }: { post: CmsPageEntry, banners: Banner[] }) {
   const isClient = useIsClient()
-  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
-  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
-  const userActivity = posthog.isFeatureEnabled('user-activity')
-  console.log('[DEBUG] userActivity', userActivity)
 
   if (!post) {
     return null
@@ -80,13 +75,13 @@ export default function PageBySlug ({ banners, post }: { post: CmsPageEntry, ban
         } }>
         <Heading as="h1">{ post.attributes.title }</Heading>
         <RichTextRenderer content={ post.attributes.content }/>
-        { isClient && isPageRatingWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <PageRating pageId={ post.attributes.slug }/>
           </Box>
         ) }
         <BackCta/>
-        { isClient && isSubscriptionWidgetEnabled && (
+        { isClient && (
           <Box sx={ { my: 5 } }>
             <SubscribeWidget/>
           </Box>
