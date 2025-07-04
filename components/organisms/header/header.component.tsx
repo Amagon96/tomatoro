@@ -118,7 +118,7 @@ export const Header = () => {
 
         {/* Right: auth links */ }
         <Flex sx={ { alignItems: 'center', gap: 3 } }>
-          <DesktopOtherActions/>
+          { false && <DesktopOtherActions/> }
 
           {/* Burger icon (mobile only) */ }
           <Box sx={ { display: ['block', 'none'] } }>
@@ -155,7 +155,7 @@ export const Header = () => {
               } }
             >
               <NavItems direction="column"/>
-              <MobileOtherActions/>
+              { false && <MobileOtherActions/> }
             </Flex>
           </MotionNav>
         ) }
