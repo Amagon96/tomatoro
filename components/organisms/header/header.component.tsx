@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
+import { usePostHog } from 'posthog-js/react'
 import { FC } from 'react'
 import { Box, Flex, Button, MenuButton, Close, Text, NavLink } from 'theme-ui'
 import { useBoolean } from 'usehooks-ts'
@@ -17,6 +18,9 @@ export const Header = () => {
   const { t } = useTranslation('common')
   const { setFalse, setTrue, value } = useBoolean(false)
   const { user } = useUserContext()
+  const posthog = usePostHog()
+  const flag = posthog.isFeatureEnabled('bootstrap-test')
+  console.log('[DEBUG] flag', flag)
 
   // @ts-ignore
   const pagesForLocale = PAGES[locale]
