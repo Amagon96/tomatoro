@@ -1,5 +1,6 @@
 import { SupabaseClient, User } from '@supabase/supabase-js'
-import { eachDayOfInterval, endOfMonth, format, startOfMonth } from 'date-fns'
+import { eachDayOfInterval, endOfMonth, format, isSameDay, parseISO, startOfMonth } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
 import { Segment } from '~/@types/types.db'
 import { SegmentType } from '~/utils/config'
@@ -32,7 +33,8 @@ export type WeeklyReport = Array<{
 export async function retrieveMonthlyReport (
   context: SupabaseContext,
   year = new Date().getFullYear(),
-  month = new Date().getMonth() // zero-indexed (0 = January)
+  month = new Date().getMonth(), // zero-indexed (0 = January)
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone // e.g., 'America/Mexico_City'
 ) {
   if (!context.user) {
     return
@@ -52,12 +54,16 @@ export async function retrieveMonthlyReport (
     throw error
   }
 
-  const grouped: WeeklyReport = eachDayOfInterval({ start: from, end: to }).map(date => {
-    const day = format(date, 'yyyy-MM-dd')
-    const segments = (data ?? []).filter(seg => seg.created_at.startsWith(day))
+  return eachDayOfInterval({ start: from, end: to }).map(localDate => {
+    const segments = (data ?? []).filter(seg => {
+      const utc = parseISO(seg.created_at)
+      const local = toZonedTime(utc, timezone)
+      return isSameDay(local, localDate)
+    })
 
-    return { day, segments }
+    return {
+      day: format(localDate, 'yyyy-MM-dd'),
+      segments,
+    }
   })
-
-  return grouped
 }
