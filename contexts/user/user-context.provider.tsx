@@ -1,8 +1,9 @@
 import { User } from '@supabase/supabase-js'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SegmentType } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
+import { createSegment } from '~/utils/supabase/queries/segments.query'
 
 export const UserContext = React.createContext<{
   user?: User | null
@@ -26,6 +27,7 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const supabase = createClient()
   const [user, setUser] = useState<User | null>(null)
+  const context = useMemo(() => ({ supabase, user }), [supabase, user])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -34,19 +36,8 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [supabase])
 
   const reportSegment = useCallback(async (type: SegmentType) => {
-    if (!user) {
-      return
-    }
-
-    const { error } = await supabase.from('segments').insert({
-      type,
-      user_id: user?.id,
-    })
-
-    if (error) {
-      throw error
-    }
-  }, [supabase, user])
+    await createSegment(context, type)
+  }, [context])
 
   const value = {
     user,
@@ -54,9 +45,7 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   return (
-    <UserContext.Provider
-      value={ value }
-    >
+    <UserContext.Provider value={ value }>
       { children }
     </UserContext.Provider>
   )
