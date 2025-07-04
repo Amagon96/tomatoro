@@ -19,8 +19,7 @@ export const Header = () => {
   const { setFalse, setTrue, value } = useBoolean(false)
   const { user } = useUserContext()
   const posthog = usePostHog()
-  const flag = posthog.isFeatureEnabled('bootstrap-test')
-  console.log('[DEBUG] flag', flag)
+  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
 
   // @ts-ignore
   const pagesForLocale = PAGES[locale]
@@ -122,7 +121,7 @@ export const Header = () => {
 
         {/* Right: auth links */ }
         <Flex sx={ { alignItems: 'center', gap: 3 } }>
-          { false && <DesktopOtherActions/> }
+          { isUserActivityEnabled && <DesktopOtherActions/> }
 
           {/* Burger icon (mobile only) */ }
           <Box sx={ { display: ['block', 'none'] } }>
@@ -159,7 +158,7 @@ export const Header = () => {
               } }
             >
               <NavItems direction="column"/>
-              { false && <MobileOtherActions/> }
+              { isUserActivityEnabled && <MobileOtherActions/> }
             </Flex>
           </MotionNav>
         ) }

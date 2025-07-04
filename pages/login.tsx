@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import React from 'react'
+import { usePostHog } from 'posthog-js/react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button, Flex, Grid, Heading, Input, Paragraph } from 'theme-ui'
 
@@ -17,6 +18,14 @@ export default function LoginPage () {
   const router = useRouter()
   const supabase = createClient()
   const { t } = useTranslation('pages')
+  const posthog = usePostHog()
+  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
+
+  useEffect(() => {
+    if (!isUserActivityEnabled) {
+      router.push('/')
+    }
+  })
 
   const {
     formState: { errors },
@@ -44,7 +53,7 @@ export default function LoginPage () {
     router.push('/')
   }
 
-  return (
+  return isUserActivityEnabled && (
     <Page subtitle={ t('login.title') } isWrapped>
       <Grid variant="contained" sx={ { justifyItems: 'start' } }>
         <Heading as="h1">{ t('login.title') }</Heading>
