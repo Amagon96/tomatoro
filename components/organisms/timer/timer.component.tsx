@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import useTranslation from 'next-translate/useTranslation'
 import React, { FC } from 'react'
 import { Flex, Text } from 'theme-ui'
@@ -7,7 +6,7 @@ import { useTimerContext } from '~/contexts/timer'
 import { useTimerStore } from '~/stores/time'
 import { formatTime } from '~/utils/timer.utils'
 
-import { Button, Controls, Donut } from './timer.styles'
+import { Button, Controls, Image } from './timer.styles'
 import tomatoHero from './tomato-hero.svg'
 
 export const Timer: FC = () => {
@@ -43,13 +42,8 @@ export const Timer: FC = () => {
       <Image
         priority
         src={ tomatoHero }
-        alt={ t('whoUses.imageAlt') }
-        sx={ {
-          width: '100%',
-          position: 'absolute',
-          height: '100%',
-          zIndex: -1,
-        } }
+        alt=""
+        aria-hidden
       />
       <Text variant="display">
         { formatTime(time) }
