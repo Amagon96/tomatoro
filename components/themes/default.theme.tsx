@@ -61,6 +61,13 @@ export const defaultTheme: Theme = {
       color: 'muted',
       fontFamily: 'body',
     },
+    nav: {
+      color: 'textMediumEmphasis',
+      fontWeight: 'normal',
+      '&:hover': {
+        color: 'primary',
+      },
+    },
   },
   colors: {
     contrastText: '#fff',
@@ -226,6 +233,12 @@ export const defaultTheme: Theme = {
       borderColor: '#eee',
       maxWidth,
       mx: 'auto',
+    },
+    contained: {
+      mx: 'auto',
+      maxWidth,
+      padding: '1em',
+      width: '100%',
     },
   },
 }

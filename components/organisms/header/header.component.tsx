@@ -1,31 +1,17 @@
+import { AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import { useFeatureFlagEnabled } from 'posthog-js/react'
 import { FC } from 'react'
-import { Close, Flex, Grid, MenuButton, NavLink, Text } from 'theme-ui'
+import { Box, Flex, Button, MenuButton, Close, Text, NavLink } from 'theme-ui'
 import { useBoolean } from 'usehooks-ts'
 
-import { LanguageSelector } from '~/components/molecules/language-selector'
+import { Container, Heading, MotionNav } from '~/components/organisms/header/header.styles'
 import { useUserContext } from '~/contexts/user'
 import logoTomatoro from '~/public/svg/logo-tomatoro.svg'
 import { LINKS, PAGES } from '~/utils/config'
-
-import { Container, Heading, MotionNav } from './header.styles'
-
-const menuVariants = {
-  opened: {
-    top: 0,
-    transition: {
-      when: 'beforeChildren',
-      staggerChildren: 0.5,
-    },
-  },
-  closed: {
-    top: '-90vh',
-  },
-}
 
 export const Header = () => {
   const { locale = 'en' } = useRouter()
@@ -38,82 +24,145 @@ export const Header = () => {
   // @ts-ignore
   const pagesForLocale = PAGES[locale]
 
-  const anonItems = [
-    { key: 'register', href: LINKS.REGISTER },
-    { key: 'login', href: LINKS.LOGIN },
-  ]
-
-  const userItems = [
-    { key: 'dashboard', href: LINKS.DASHBOARD },
-    { key: 'logout', href: LINKS.LOGOUT },
-  ]
-
   const menuItems = [
     { key: 'home', href: LINKS.HOME },
     { key: 'howItWorks', href: pagesForLocale.HOW_IT_WORKS },
     { key: 'contact', href: pagesForLocale.CONTACT },
-    ...(user ? userItems : anonItems),
   ]
 
+  function NavItems ({ direction = 'row' }: { direction?: 'row' | 'column' }) {
+    return (
+      <Flex sx={ { flexDirection: direction, gap: 3 } }>
+        { menuItems.map((item) => (
+          <NavLink key={ item.key } as={ Link } href={ item.href } onClick={ () => setFalse() }>
+            <Text variant="nav">
+              { t(`header.items.${ item.key }`) }
+            </Text>
+          </NavLink>
+        )) }
+      </Flex>
+    )
+  }
+
+  function DesktopOtherActions () {
+    return user ? (
+      <>
+        <Box sx={ { display: ['none', 'block'] } }>
+          <NavLink as={ Link } href={ LINKS.LOGOUT } onClick={ () => setFalse() }>
+            <Text variant="nav">
+              { t('header.items.logout') }
+            </Text>
+          </NavLink>
+        </Box>
+        <Box sx={ { display: ['none', 'block'] } }>
+          {/* @ts-ignore */ }
+          <Button as={ Link } href={ LINKS.DASHBOARD }>
+            { t('header.items.dashboard') }
+          </Button>
+        </Box>
+      </>
+    ) : (
+      <>
+        <Box sx={ { display: ['none', 'block'] } }>
+          <NavLink as={ Link } href={ LINKS.LOGIN } onClick={ () => setFalse() }>
+            <Text variant="nav">
+              { t('header.items.login') }
+            </Text>
+          </NavLink>
+        </Box>
+        <Box sx={ { display: ['none', 'block'] } }>
+          {/* @ts-ignore */ }
+          <Button as={ Link } href={ LINKS.REGISTER }>
+            { t('header.items.register') }
+          </Button>
+        </Box>
+      </>
+    )
+  }
+
+  function MobileOtherActions () {
+    return user ? (
+      <>
+        <NavLink as={ Link } href={ LINKS.LOGOUT } onClick={ () => setFalse() }>
+          <Text variant="nav">
+            { t('header.items.logout') }
+          </Text>
+        </NavLink>
+        {/* @ts-ignore */ }
+        <Button as={ Link } href={ LINKS.DASHBOARD }>
+          { t('header.items.dashboard') }
+        </Button>
+      </>
+    ) : (
+      <>
+        <NavLink as={ Link } href={ LINKS.LOGIN } onClick={ () => setFalse() }>
+          <Text variant="nav">
+            { t('header.items.login') }
+          </Text>
+        </NavLink>
+        {/* @ts-ignore */ }
+        <Button as={ Link } href={ LINKS.REGISTER }>
+          { t('header.items.register') }
+        </Button>
+      </>
+    )
+  }
+
   return (
-    <Container as="header">
-      <Flex sx={ {
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '1rem',
-        margin: '0 auto',
-        maxWidth: '768px',
-        width: '100%',
-      } }>
-        <Grid sx={ { gridTemplateColumns: ['1fr auto', '1fr auto'], width: '100%' } }>
+    <Container as="header" sx={ { borderColor: 'muted' } }>
+      <Flex variant="styles.contained" sx={ { justifyContent: 'space-between', alignItems: 'center' } }>
+        {/* Left: logo + links (desktop only) */ }
+        <Flex sx={ { alignItems: 'center', gap: 3 } }>
           <TomatoroLogo/>
-          <MenuButton
-            aria-label={ t('header.toggle') }
-            onClick={ () => setTrue() }
-          />
-        </Grid>
+          <Box sx={ { display: ['none', 'flex'] } }>
+            <NavItems/>
+          </Box>
+        </Flex>
+
+        {/* Right: auth links */ }
+        <Flex sx={ { alignItems: 'center', gap: 3 } }>
+          <DesktopOtherActions/>
+
+          {/* Burger icon (mobile only) */ }
+          <Box sx={ { display: ['block', 'none'] } }>
+            {
+              value ? (
+                <Close onClick={ () => setFalse() }/>
+              ) : (
+                <MenuButton
+                  aria-label={ t('header.toggle') }
+                  onClick={ () => setTrue() }
+                />
+              )
+            }
+          </Box>
+        </Flex>
       </Flex>
 
-      <MotionNav
-        initial={ false }
-        variants={ menuVariants }
-        animate={ value ? 'opened' : 'closed' }
-      >
-        <Flex sx={ {
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '1rem',
-          margin: '0 auto',
-          maxWidth: '768px',
-          width: '100%',
-        } }>
-          <Grid sx={ { gridTemplateColumns: ['1fr auto', '1fr auto'], width: '100%' } }>
-            <TomatoroLogo/>
-            <Close onClick={ () => setFalse() }/>
-          </Grid>
-        </Flex>
-        <Flex sx={ {
-          alignItems: 'center',
-          backgroundColor: 'white',
-          gap: '1rem',
-          flexDirection: 'column',
-          padding: '1.5rem 0',
-          borderBottom: '1px solid #eee',
-          borderTop: '1px solid #eee',
-        } }>
-          { menuItems.map((item) => (
-            <NavLink key={ item.key } as={ Link } href={ item.href } onClick={ () => setFalse() }>
-              <Text>
-                { t(`header.items.${ item.key }`) }
-              </Text>
-            </NavLink>
-          )) }
-          <Text sx={ { cursor: 'pointer', fontWeight: 'bold' } } onClick={ () => setFalse() }>
-            { t('header.items.close') }
-          </Text>
-          <LanguageSelector/>
-        </Flex>
-      </MotionNav>
+      {/* Mobile nav menu */ }
+      <AnimatePresence>
+        { value && (
+          <MotionNav
+            initial={ { height: 0, opacity: 0 } }
+            animate={ { height: 'auto', opacity: 1 } }
+            exit={ { height: 0, opacity: 0 } }
+            transition={ { duration: 0.2 } }
+          >
+            <Flex
+              sx={ {
+                flexDirection: 'column',
+                gap: 3,
+                p: 3,
+                pb: 4,
+                display: ['flex', 'none'],
+              } }
+            >
+              <NavItems direction="column"/>
+              <MobileOtherActions/>
+            </Flex>
+          </MotionNav>
+        ) }
+      </AnimatePresence>
     </Container>
   )
 }
