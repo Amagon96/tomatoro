@@ -31,7 +31,7 @@ export const TimeSelector = () => {
           onClick={ () => onSelect(key as SegmentType) }
           disabled={ currentSegment === key }
         >
-          { t(value.name) } ({ value.time / 60 }m)
+          { t(value.name) } ({ value.time / 60 })
         </Button>
       )) }
       <Settings>
