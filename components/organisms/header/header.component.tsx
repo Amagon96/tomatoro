@@ -8,10 +8,12 @@ import { FC } from 'react'
 import { Box, Flex, Button, MenuButton, Close, Text, NavLink } from 'theme-ui'
 import { useBoolean } from 'usehooks-ts'
 
-import { Container, Heading, MotionNav } from '~/components/organisms/header/header.styles'
+import { LanguageSelector } from '~/components/molecules/language-selector'
 import { useUserContext } from '~/contexts/user'
 import logoTomatoro from '~/public/svg/logo-tomatoro.svg'
 import { LINKS, PAGES } from '~/utils/config'
+
+import { Container, Heading, MotionNav } from './header.styles'
 
 export const Header = () => {
   const { locale = 'en' } = useRouter()
@@ -121,6 +123,9 @@ export const Header = () => {
 
         {/* Right: auth links */ }
         <Flex sx={ { alignItems: 'center', gap: 3 } }>
+          <Box sx={ { display: ['none', 'block'] } }>
+            <LanguageSelector />
+          </Box>
           { isUserActivityEnabled && <DesktopOtherActions/> }
 
           {/* Burger icon (mobile only) */ }
@@ -159,6 +164,7 @@ export const Header = () => {
             >
               <NavItems direction="column"/>
               { isUserActivityEnabled && <MobileOtherActions/> }
+              <LanguageSelector />
             </Flex>
           </MotionNav>
         ) }
