@@ -23,13 +23,14 @@ axios.interceptors.request.use(
   },
 )
 
-export const getPostBySlug = async (slug: string, locale?: string) => {
+export const getArticleBySlug = async (slug: string, locale?: string) => {
   if (!isCleanInput(slug)) {
     throw new Error('Invalid slug')
   }
 
   const localeParam = locale ? `&locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<CmsPageEntry>>(`${ CMS_URL }/posts?filters[slug][$eq]=${ slug }&populate[0]=seo&populate[1]=seo.metaImage&populate[2]=hero&populate[3]=category${ localeParam }`)
+  const { data: obj } = await axios.get<CmsResponse<CmsPageEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[0]=blocks${ localeParam }`)
+
   return obj.data[0]
 }
 

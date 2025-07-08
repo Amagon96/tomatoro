@@ -51,22 +51,18 @@ type Image = {
 
 type CmsPageEntry = {
   id: number
-  attributes: {
-    title: string
-    slug: string
-    content: string
-    createdAt: string
-    updatedAt: string
-    publishedAt: string
-    locale: Locale
-    hero: {
-      data: Image | null
-    }
-    seo: Seo | null
-    category: {
-      data: Category | null
-    }
-  }
+  title: string
+  slug: string
+  content: string
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+  locale: Locale
+  blocks: Array<{
+    '__component': 'shared.rich-text',
+    id: number
+    body
+  }>
 }
 
 type Update = {
