@@ -4,6 +4,7 @@ import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useMemo } from 'react'
 import { Flex, Heading, NavLink, Text } from 'theme-ui'
 
+import { LanguageSelector } from '~/components/molecules/language-selector'
 import { LINKS, PAGES } from '~/utils/config'
 
 import { Container, section, Section } from './footer.styles'
@@ -77,6 +78,9 @@ export const Footer: FC<Props> = ({ version }) => {
             )) }
           </Section>
         )) }
+      </Flex>
+      <Flex sx={ { ...section, color: 'textMediumEmphasis', justifyContent: 'flex-end' } }>
+        <LanguageSelector />
       </Flex>
       <Flex sx={ section }>
         <Flex sx={ { flexDirection: 'column' } }>
