@@ -1,5 +1,7 @@
+import { usePostHog } from 'posthog-js/react'
 import React from 'react'
 import { Box, Divider, Grid } from 'theme-ui'
+import { useIsClient } from 'usehooks-ts'
 
 import { Screen } from '~/components/atoms/screen'
 import { TomatoCounter } from '~/components/molecules/tomato-counter'
@@ -14,6 +16,9 @@ import { useTimerStore } from '~/stores/time'
 import { formatTime } from '~/utils/timer.utils'
 
 export default function Home () {
+  const isClient = useIsClient()
+  const posthog = usePostHog()
+  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
   const [isStarted, time] = useTimerStore(state => [state.isStarted, state.time])
   const showTimer = useSettingsStore(state => state.showTimer)
   const title = showTimer && isStarted ? formatTime(time) : undefined
@@ -38,11 +43,13 @@ export default function Home () {
         <WhoUses/>
       </Screen>
 
-      <Screen id="subscribe">
-        <Grid variant="contained" gap={ 4 }>
-          <SubscribeWidget/>
-        </Grid>
-      </Screen>
+      { isClient && isSubscriptionWidgetEnabled && (
+        <Screen id="subscribe">
+          <Grid variant="contained" gap={ 4 }>
+            <SubscribeWidget/>
+          </Grid>
+        </Screen>
+      )}
     </Page>
   )
 }

@@ -25,7 +25,7 @@ export const SubscribeWidget: FC = () => {
   async function handleSubscribeSubmit (data: Inputs) {
     try {
       setIsSubscribing(true)
-      await postSubscription({ email: data.email, marketing: true })
+      await postSubscription({ email: data.email })
       setIsSubscribing(false)
       setIsEmailSubscribed(true)
     } catch (e) {

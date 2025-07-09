@@ -55,8 +55,8 @@ export const getSingleType = async <T>(apiId: string, extraParams?: string, loca
 }
 
 export const getQuestions = async (locale?: string) => {
-  const localeParam = locale ? `?locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<Question>>(`${ CMS_URL }/faqs${ localeParam }`)
+  const localeParam = locale ? `&locale=${ locale }` : ''
+  const { data: obj } = await axios.get<CmsResponse<Question>>(`${ CMS_URL }/faqs?populate[0]=blocks${ localeParam }`)
   return obj.data
 }
 
@@ -75,7 +75,6 @@ export const postRating = async <T>(rating: RatingBody) => {
 
 export interface SubscriptionBody {
   email: string
-  marketing: true
 }
 
 export const postSubscription = async <T>(subscription: SubscriptionBody) => {
