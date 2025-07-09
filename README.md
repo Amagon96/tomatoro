@@ -56,22 +56,18 @@ This schedule is not final and will change in time:
 - ~~**v3.0.0** (may 1st!) - Complete rework~~ (🚀 done!)
 - ~~**v3.0.144** - Multi-language support (ES, EN)~~ (🚀 done!)
 
-#### Autumn 2023
+#### In progress
 
-- **v3.0.x** - Dark theme
+- **v3.x** - User accounts: store customizations in API, as well as usage data
 
-#### Somewhere in 2024
+#### Planned
 
-- **v3.0.x** - Dark theme
+- **v3.x** - Dark theme
 - **v3.x** - Quick actions from notifications (when supported by the browser)
 - **v3.x** - Better support: knowledge database with guides and solutions for common issues
 - **v3.x** - Better support: new channels for faster support response (replacement of GitHub issues)
 - **v3.x** - Onboarding guide: learn how to use Tomatoro by doing instead of reading
-
-#### Somewhere in 2024
-
 - **v3.x** - Better time accuracy: rely on timestamps
 - **v3.x** - Less energy consumption: fewer updates when the timer runs in the background
-- **v3.x** - User accounts: store customizations in API, as well as usage data
 
 This is our public trello board: https://trello.com/b/LH0sgrrZ/tomatoro-2023

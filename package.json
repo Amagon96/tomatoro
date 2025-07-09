@@ -1,6 +1,6 @@
 {
   "name": "tomatoro",
-  "version": "3.0.222",
+  "version": "3.0.224",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "echo 'ok'",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "11.13.5",
