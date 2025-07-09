@@ -29,54 +29,34 @@ export const getArticleBySlug = async (slug: string, locale?: string) => {
   }
 
   const localeParam = locale ? `&locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<CmsPageEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[0]=blocks${ localeParam }`)
+  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[0]=blocks${ localeParam }`)
 
   return obj.data[0]
 }
 
-const localeToBlogCategoryId = {
-  'en': 1,
-  'es': 5,
-}
+const blogCategoryId = 1
 
-export const getAllBlogs = async (locale: Locale) => {
-  const { data: obj } = await axios.get<CmsResponse<CmsPageEntry>>(`${ CMS_URL }/posts?filters[category]=${ localeToBlogCategoryId[locale] }&locale=${ locale }`)
+export const getAllArticles = async (locale: Locale) => {
+  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[category][$eq]=${ blogCategoryId }&locale=${ locale }`)
   return obj.data
 }
 
-const localeToHelpCategoryId = {
-  'en': 2,
-  'es': 3,
-}
+const helpCategoryId = 2
 
 export const getAllHelpEntries = async (locale: Locale) => {
-  const { data: obj } = await axios.get<CmsResponse<CmsPageEntry>>(`${ CMS_URL }/posts?filters[category]=${ localeToHelpCategoryId[locale] }&locale=${ locale }`)
-  return obj.data
-}
-
-export const getUpdates = async (locale?: string) => {
-  const localeParam = locale ? `?locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<Update>>(`${ CMS_URL }/updates${ localeParam }`)
-  return obj.data
-}
-
-export const getBanners = async (location?: string, locale?: string) => {
-  const additionalLocation = location ? `filters[location][$in][1]=${ location }&` : ''
-  const query = `filters[location][$in][0]=all&${ additionalLocation }sort=createdAt:desc&pagination[start]=0&pagination[limit]=1`
-  const localeParam = locale ? `&locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<Banner>>(`${ CMS_URL }/banners?${ query }${ localeParam }`)
-  return obj.data
-}
-
-export const getQuestions = async (locale?: string) => {
-  const localeParam = locale ? `?locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<Question>>(`${ CMS_URL }/questions${ localeParam }`)
+  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[category][$eq]=${ helpCategoryId }&locale=${ locale }`)
   return obj.data
 }
 
 export const getSingleType = async <T>(apiId: string, extraParams?: string, locale?: string) => {
   const localeParam = locale ? `&locale=${ locale }` : ''
   const { data: obj } = await axios.get<CmsSingleEntryResponse<T>>(`${ CMS_URL }/${ apiId }?${ extraParams }${ localeParam }`)
+  return obj.data
+}
+
+export const getQuestions = async (locale?: string) => {
+  const localeParam = locale ? `?locale=${ locale }` : ''
+  const { data: obj } = await axios.get<CmsResponse<Question>>(`${ CMS_URL }/faqs${ localeParam }`)
   return obj.data
 }
 

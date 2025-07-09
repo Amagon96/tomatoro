@@ -2,58 +2,49 @@ import * as Sentry from '@sentry/nextjs'
 import { GetStaticProps } from 'next'
 import Image from 'next/image'
 import React from 'react'
-import { Flex, Grid, Heading } from 'theme-ui'
+import { Flex, Grid } from 'theme-ui'
 
 import { BackCta } from '~/components/atoms/back-cta'
-import { RichTextRenderer } from '~/components/organisms/rich-text-renderer'
+import { CmsArticle } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import graphicTakeBreak from '~/public/svg/graphic-take-break.svg'
-import { getSingleType } from '~/utils/cms.api'
+import { getArticleBySlug } from '~/utils/cms.api'
 
 const fallbackPage: BasicPage = {
   id: 'fallback',
-  attributes: {
-    title: 'Oops! 🍅 Time\'s Up!',
-    content: 'We couldn\'t find the page you\'re looking for.\n\nLet\'s get you back on track!\n',
-    createdAt: '2023-04-29T00:35:43.151Z',
-    updatedAt: '2023-04-29T00:40:25.617Z',
-    publishedAt: '2023-04-29T00:40:25.617Z',
-    locale: 'en',
-    hero: {
-      data: null,
+  blocks: [
+    {
+      __component: 'shared.rich-text',
+      id: -1,
+      body: '# Oops! 🍅 Time\'s Up!\nWe couldn\'t find the page you\'re looking for.\n\nLet\'s get you back on track!\n',
     },
-    seo: null,
-  },
+  ],
 }
 
 export const getStaticProps: GetStaticProps<
-  { page: BasicPage },
+  { article: BasicPage },
   {}
 > = async ({ locale }) => {
   try {
-    const fieldParameters = ['seo', 'seo.metaImage', 'hero'].join('&populate[]=')
-    let page = await getSingleType<BasicPage>('error-404', fieldParameters, locale)
+    let article: BasicPage = await getArticleBySlug('error-404', locale)
 
-    if (!page) {
-      page = fallbackPage
+    if (!article) {
+      article = fallbackPage
     }
 
-    return { props: { page } }
+    return { props: { article } }
   } catch (e) {
     Sentry.captureException(e)
-    return { props: { page: fallbackPage } }
+    return { props: { article: fallbackPage } }
   }
 }
 
-export default function Custom404 ({ page }: { page: CmsPageEntry }) {
+export default function Custom404 ({ article }: { article: BasicPage }) {
   return (
-    <Page subtitle={ page.attributes.title } isWrapped>
+    <Page subtitle="404" isWrapped>
       <Grid variant="contained" columns={ 2 }>
         <Grid gap={ 3 } sx={ { justifyItems: 'start' } }>
-          <Heading as="h1">{ page.attributes.title }</Heading>
-          <div>
-            <RichTextRenderer content={ page.attributes.content }/>
-          </div>
+          <CmsArticle article={ article }/>
           <BackCta/>
         </Grid>
         <Flex sx={ { justifyContent: 'center' } }>

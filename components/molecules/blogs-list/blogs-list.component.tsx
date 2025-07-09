@@ -7,20 +7,20 @@ import { Date } from '~/components/atoms/date'
 import { List, ListItem } from './blogs-list.styles'
 
 interface Props {
-  blogs: CmsPageEntry[]
+  articles: CmsArticleEntry[]
   path?: string
 }
 
-export const BlogsList: FC<Props> = ({ blogs, path = 'blog' }) => {
+export const ArticlesList: FC<Props> = ({ articles, path = 'blog' }) => {
   return (
     <List>
-      { blogs.map((post) => (
+      { articles.map((post) => (
         <ListItem key={ post.id }>
           <Heading as="h4" mr={ 3 }>
-            <Date dateString={ post.attributes.publishedAt }/>
+            <Date dateString={ post.publishedAt }/>
           </Heading>
-          <TuiLink as={ Link } href={ `/${ path }/${ post.attributes.slug }` }>
-            { post.attributes.title }
+          <TuiLink as={ Link } href={ `/${ path }/${ post.slug }` }>
+            { post.title }
           </TuiLink>
         </ListItem>
       )) }

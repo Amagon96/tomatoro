@@ -1,17 +1,17 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
 
-import { getAllBlogs, getAllHelpEntries } from '~/utils/cms.api'
+import { getAllArticles, getAllHelpEntries } from '~/utils/cms.api'
 import { getAllStaticPages } from '~/utils/data.api'
 
 interface SiteMapData {
   posts: {
-    en: CmsPageEntry[]
-    es: CmsPageEntry[]
+    en: CmsArticleEntry[]
+    es: CmsArticleEntry[]
   }
   help: {
-    en: CmsPageEntry[]
-    es: CmsPageEntry[]
+    en: CmsArticleEntry[]
+    es: CmsArticleEntry[]
   }
   domain: string
   staticPages: Array<{ slug: string }>
@@ -39,28 +39,28 @@ function generateSiteMap ({ domain, help, posts, staticPages }: SiteMapData) {
             <changefreq>monthly</changefreq>
             <priority>1.0</priority>
         </url>`).join('') }
-     ${ posts.en.map(({ attributes: { slug, updatedAt } }) => `
+     ${ posts.en.map(({ slug, updatedAt }) => `
         <url>
             <loc>${ `${ domain }/blog/${ slug }` }</loc>
             <lastmod>${ updatedAt }</lastmod>
             <changefreq>monthly</changefreq>
             <priority>1.0</priority>
         </url>`).join('') }
-     ${ posts.es.map(({ attributes: { slug, updatedAt } }) => `
+     ${ posts.es.map(({ slug, updatedAt }) => `
         <url>
             <loc>${ `${ domain }/es/blog/${ slug }` }</loc>
             <lastmod>${ updatedAt }</lastmod>
             <changefreq>monthly</changefreq>
             <priority>1.0</priority>
         </url>`).join('') }
-      ${ help.en.map(({ attributes: { slug, updatedAt } }) => `
+      ${ help.en.map(({ slug, updatedAt }) => `
         <url>
             <loc>${ `${ domain }/help/${ slug }` }</loc>
             <lastmod>${ updatedAt }</lastmod>
             <changefreq>monthly</changefreq>
             <priority>1.0</priority>
         </url>`).join('') }
-     ${ help.es.map(({ attributes: { slug, updatedAt } }) => `
+     ${ help.es.map(({ slug, updatedAt }) => `
         <url>
             <loc>${ `${ domain }/es/ayuda/${ slug }` }</loc>
             <lastmod>${ updatedAt }</lastmod>
@@ -75,8 +75,8 @@ export const getServerSideProps: GetServerSideProps<{}> = async ({ res }) => {
   try {
     const staticPages = getAllStaticPages()
     const [postsEn, postsEs, helpEntriesEn, helpEntriesEs] = await Promise.all([
-      getAllBlogs('en'),
-      getAllBlogs('es'),
+      getAllArticles('en'),
+      getAllArticles('es'),
       getAllHelpEntries('en'),
       getAllHelpEntries('es'),
     ])

@@ -24,7 +24,7 @@ export const Footer: FC<Props> = ({ version }) => {
 
     const siteItems: FooterLink[] = [
       { key: 'blog', href: pagesForLocale.BLOG },
-      { key: 'news', href: LINKS.NEWS },
+      // { key: 'news', href: LINKS.NEWS },
       { key: 'terms', href: pagesForLocale.TERMS },
       { key: 'privacy', href: pagesForLocale.PRIVACY },
       { key: 'github', href: LINKS.GITHUB },
