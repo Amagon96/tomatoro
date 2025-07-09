@@ -48,7 +48,7 @@ export const PAGES = {
   en: {
     TERMS: '/terms-of-service',
     PRIVACY: '/privacy-notice',
-    // FAQ: '/faq',
+    FAQ: '/faq',
     HOW_IT_WORKS: '/how-it-works',
     CONTACT: '/contact',
     DASHBOARD: '/dashboard',
@@ -70,7 +70,6 @@ export const PAGES = {
 
 export const LINKS = {
   HOME: '/',
-  NEWS: '/news',
   SUPPORT: 'mailto:hello@tomatoro.com',
   GITHUB: 'https://github.com/tonymtz/tomatoro',
   FEEDBACK: 'https://goo.gl/forms/T9BxmGcn38dlZz2w1',

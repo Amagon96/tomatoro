@@ -19,12 +19,10 @@ export const Footer: FC<Props> = ({ version }) => {
   const { t } = useTranslation('common')
 
   const footerData = useMemo(() => {
-    // @ts-ignore
-    const pagesForLocale = PAGES[locale]
+    const pagesForLocale = PAGES[locale as keyof typeof PAGES]
 
     const siteItems: FooterLink[] = [
       { key: 'blog', href: pagesForLocale.BLOG },
-      // { key: 'news', href: LINKS.NEWS },
       { key: 'terms', href: pagesForLocale.TERMS },
       { key: 'privacy', href: pagesForLocale.PRIVACY },
       { key: 'github', href: LINKS.GITHUB },
@@ -32,7 +30,7 @@ export const Footer: FC<Props> = ({ version }) => {
 
     const supportItems: FooterLink[] = [
       // { key: 'help', href: pagesForLocale.HELP },
-      // { key: 'faq', href: pagesForLocale.FAQ },
+      { key: 'faq', href: pagesForLocale.FAQ },
       { key: 'status', href: LINKS.STATUS },
       { key: 'contact', href: pagesForLocale.CONTACT },
     ]

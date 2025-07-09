@@ -11,6 +11,7 @@ import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
 import { CmsArticle } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import { getArticleBySlug, getQuestions } from '~/utils/cms.api'
+import { createFaqStructuredData } from '~/utils/structured-data.utils'
 
 const slug = 'faq'
 
@@ -40,7 +41,12 @@ export default function Faq ({ page, questions }: RouteProps) {
   }
 
   return (
-    <Page isWrapped>
+    <Page
+      isWrapped
+      seo={ {
+        structuredData: JSON.stringify(createFaqStructuredData(questions)),
+      } }
+    >
       <Grid
         variant="contained"
         sx={ {

@@ -15,7 +15,7 @@ interface PageProps {
   banners?: Banner[]
   children: React.ReactNode
   subtitle?: string
-  seo?: Seo | null
+  seo?: Partial<Seo> | null
   isWrapped?: boolean
   hero?: {
     imageUrl?: string
