@@ -29,7 +29,7 @@ export const Footer: FC<Props> = ({ version }) => {
     ]
 
     const supportItems: FooterLink[] = [
-      // { key: 'help', href: pagesForLocale.HELP },
+      { key: 'help', href: pagesForLocale.HELP },
       { key: 'faq', href: pagesForLocale.FAQ },
       { key: 'status', href: LINKS.STATUS },
       { key: 'contact', href: pagesForLocale.CONTACT },

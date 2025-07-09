@@ -53,7 +53,7 @@ export const PAGES = {
     CONTACT: '/contact',
     DASHBOARD: '/dashboard',
     BLOG: '/blog',
-    // HELP: '/help',
+    HELP: '/help',
   },
   es: {
     TERMS: '/es/terminos-servicio',

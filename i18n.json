@@ -3,6 +3,8 @@
   "defaultLocale": "en",
   "pages": {
     "*": ["common", "feedback", "subscribe"],
+    "/blog": ["pages"],
+    "/help": ["pages"],
     "/news": ["pages"],
     "/login": ["pages"],
     "/dashboard": ["pages", "activity"],

@@ -6,11 +6,11 @@ import { Grid, Heading } from 'theme-ui'
 
 import { ArticlesList } from '~/components/molecules/blogs-list'
 import { Page } from '~/components/templates/page'
-import { getAllArticles } from '~/utils/cms.api'
+import { getAllHelpEntries } from '~/utils/cms.api'
 
 export const getServerSideProps: GetServerSideProps<{}> = async ({ locale = 'en' }) => {
   try {
-    const articles = await getAllArticles(locale as Locale)
+    const articles = await getAllHelpEntries(locale as Locale)
     return { props: { articles: articles } }
   } catch (e) {
     Sentry.captureException(e)
@@ -18,13 +18,13 @@ export const getServerSideProps: GetServerSideProps<{}> = async ({ locale = 'en'
   }
 }
 
-export default function Blog ({ articles }: { articles: CmsArticleEntry[] }) {
+export default function HelpCenter ({ articles }: { articles: CmsArticleEntry[] }) {
   const { t } = useTranslation('pages')
 
   return (
     <Page subtitle="Articles" isWrapped>
       <Grid variant="contained">
-        <Heading as="h1">{ t('blog.title') }</Heading>
+        <Heading as="h1">{ t('help.title') }</Heading>
 
         <ArticlesList articles={ articles }/>
       </Grid>

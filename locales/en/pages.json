@@ -11,5 +11,11 @@
   "dashboard": {
     "title": "Dashboard",
     "greeting": "Hello, {{name}}!"
+  },
+  "blog": {
+    "title": "Welcome to our blog"
+  },
+  "help": {
+    "title": "Help center"
   }
 }
