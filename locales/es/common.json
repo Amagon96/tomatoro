@@ -1,7 +1,7 @@
 {
   "done": "Terminar",
   "pause": "Pausa",
-  "start": "Empezar",
+  "start": "Iniciar",
   "progress": "Progreso hecho: {{progress}}",
   "settings": "Configuración",
   "segment": {
