@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import React from 'react'
 import { Grid, Heading } from 'theme-ui'
@@ -18,7 +19,13 @@ export const getServerSideProps: GetServerSideProps<{}> = async ({ locale = 'en'
   }
 }
 
+const LOCALE_TO_PATH: Record<Locale, string> = {
+  en: 'help',
+  es: 'ayuda',
+}
+
 export default function HelpCenter ({ articles }: { articles: CmsArticleEntry[] }) {
+  const { locale = 'en' } = useRouter()
   const { t } = useTranslation('pages')
 
   return (
@@ -26,7 +33,7 @@ export default function HelpCenter ({ articles }: { articles: CmsArticleEntry[] 
       <Grid variant="contained">
         <Heading as="h1">{ t('help.title') }</Heading>
 
-        <ArticlesList articles={ articles }/>
+        <ArticlesList articles={ articles } path={ LOCALE_TO_PATH[locale as Locale] } />
       </Grid>
     </Page>
   )
