@@ -1,7 +1,7 @@
-import * as Sentry from '@sentry/nextjs'
-import { GetServerSideProps } from 'next'
+import { usePostHog } from 'posthog-js/react'
 import React from 'react'
 import { Box, Divider, Grid } from 'theme-ui'
+import { useIsClient } from 'usehooks-ts'
 
 import { Screen } from '~/components/atoms/screen'
 import { TomatoCounter } from '~/components/molecules/tomato-counter'
@@ -13,26 +13,18 @@ import { TimerWithSelector } from '~/components/templates/timer-with-selector'
 import { WhoUses } from '~/components/templates/who-uses'
 import { useSettingsStore } from '~/stores/settings'
 import { useTimerStore } from '~/stores/time'
-import { getBanners } from '~/utils/cms.api'
 import { formatTime } from '~/utils/timer.utils'
 
-export const getServerSideProps: GetServerSideProps<{}> = async () => {
-  try {
-    const banners = await getBanners('home')
-    return { props: { banners } }
-  } catch (e) {
-    Sentry.captureException(e)
-    return { props: { banners: [] } }
-  }
-}
-
-export default function Home ({ banners }: { banners: Banner[] }) {
+export default function Home () {
+  const isClient = useIsClient()
+  const posthog = usePostHog()
+  const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
   const [isStarted, time] = useTimerStore(state => [state.isStarted, state.time])
   const showTimer = useSettingsStore(state => state.showTimer)
   const title = showTimer && isStarted ? formatTime(time) : undefined
 
   return (
-    <Page subtitle={ title } banners={ banners }>
+    <Page subtitle={ title }>
       <Box pt={ 4 } pb={ 5 }>
         <NotificationsWarn/>
         <TimerWithSelector/>
@@ -51,11 +43,13 @@ export default function Home ({ banners }: { banners: Banner[] }) {
         <WhoUses/>
       </Screen>
 
-      <Screen id="subscribe">
-        <Grid variant="contained" gap={ 4 }>
-          <SubscribeWidget/>
-        </Grid>
-      </Screen>
+      { isClient && isSubscriptionWidgetEnabled && (
+        <Screen id="subscribe">
+          <Grid variant="contained" gap={ 4 }>
+            <SubscribeWidget/>
+          </Grid>
+        </Screen>
+      )}
     </Page>
   )
 }

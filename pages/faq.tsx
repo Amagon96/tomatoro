@@ -1,26 +1,25 @@
 import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
-import posthog from 'posthog-js'
+import { usePostHog } from 'posthog-js/react'
 import React from 'react'
-import { Box, Grid, Heading } from 'theme-ui'
+import { Box, Grid } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { QuestionCard } from '~/components/atoms/question-card'
 import { PageRating } from '~/components/organisms/page-rating'
-import { RichTextRenderer } from '~/components/organisms/rich-text-renderer'
 import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
+import { CmsArticle } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
-import { getQuestions, getSingleType } from '~/utils/cms.api'
+import { getArticleBySlug, getQuestions } from '~/utils/cms.api'
 import { createFaqStructuredData } from '~/utils/structured-data.utils'
 
 const slug = 'faq'
 
 export const getServerSideProps: GetServerSideProps<{}> = async ({ locale }) => {
   try {
-    const fieldParameters = ['seo', 'seo.metaImage', 'hero'].join('&populate[]=')
     const [page, questions] = await Promise.all([
-      getSingleType<BasicPage>(slug, fieldParameters, locale),
+      getArticleBySlug(slug, locale),
       getQuestions(locale),
     ])
     return { props: { questions, page } }
@@ -32,33 +31,26 @@ export const getServerSideProps: GetServerSideProps<{}> = async ({ locale }) => 
 
 interface RouteProps {
   questions: Question[]
-  page: BasicPage | null
+  page: CmsArticleEntry | null
 }
 
 export default function Faq ({ page, questions }: RouteProps) {
   const isClient = useIsClient()
-  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
+  const posthog = usePostHog()
   const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')
+  const isPageRatingWidgetEnabled = posthog.isFeatureEnabled('page-rating-widget')
+  const sortedQuestions = questions.sort((a, b) => a.id - b.id)
 
   if (!page) {
     return null
   }
 
-  const showHero = !!page.attributes.hero?.data?.attributes.url
-
   return (
     <Page
-      hero={ {
-        imageUrl: page.attributes.hero?.data?.attributes.url,
-        caption: page.attributes.hero?.data?.attributes.caption,
-      } }
-      subtitle={ page.attributes.title }
-      //@ts-ignore
+      isWrapped
       seo={ {
-        ...page.attributes.seo,
         structuredData: JSON.stringify(createFaqStructuredData(questions)),
       } }
-      isWrapped
     >
       <Grid
         variant="contained"
@@ -66,15 +58,13 @@ export default function Faq ({ page, questions }: RouteProps) {
           gap: 3,
           lineHeight: 2,
           justifyItems: 'start',
-          paddingTop: showHero && 5,
         } }>
-        <Heading as="h1">{ page.attributes.title }</Heading>
-        <RichTextRenderer content={ page.attributes.content }/>
+        <CmsArticle article={ page }/>
 
-        { questions.map((question) => (
-          <QuestionCard key={ question.attributes.question }
-            question={ question.attributes.question }
-            answer={ question.attributes.content }/>
+        { sortedQuestions.map((question) => (
+          <QuestionCard key={ question.question }
+            question={ question.question }
+            answer={ question.blocks }/>
         )) }
 
         { isClient && isPageRatingWidgetEnabled && (

@@ -15,7 +15,7 @@ interface PageProps {
   banners?: Banner[]
   children: React.ReactNode
   subtitle?: string
-  seo?: Seo | null
+  seo?: Partial<Seo> | null
   isWrapped?: boolean
   hero?: {
     imageUrl?: string
@@ -104,7 +104,7 @@ export const Page: FC<PageProps> = ({
       {/* Warning appears only in client. It might cause issues with SSR */ }
       { isClient && shouldShowUnstableWarning(origin) && (<UnstableWarning/>) }
 
-      <Header/>
+      <Header />
 
       {/* Banners appears only in client. It might cause issues with SSR */ }
       { isClient && banners && <Banners banners={ banners }/> }

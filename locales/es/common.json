@@ -1,7 +1,7 @@
 {
-  "done": "Listo",
+  "done": "Terminar",
   "pause": "Pausa",
-  "start": "Empieza",
+  "start": "Iniciar",
   "progress": "Progreso hecho: {{progress}}",
   "settings": "Configuración",
   "segment": {
@@ -25,6 +25,10 @@
       "home": "Inicio",
       "howItWorks": "Cómo Funciona",
       "contact": "Contacto",
+      "register": "Crear cuenta",
+      "login": "Iniciar sesión",
+      "dashboard": "Panel de control",
+      "logout": "Cerrar sesión",
       "close": "Cerrar Menú"
     }
   },

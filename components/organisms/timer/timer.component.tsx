@@ -1,12 +1,13 @@
 import useTranslation from 'next-translate/useTranslation'
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { Flex, Text } from 'theme-ui'
 
 import { useTimerContext } from '~/contexts/timer'
 import { useTimerStore } from '~/stores/time'
 import { formatTime } from '~/utils/timer.utils'
 
-import { Button, Controls, Donut } from './timer.styles'
+import { Button, Controls, Image } from './timer.styles'
+import tomatoHero from './tomato-hero.svg'
 
 export const Timer: FC = () => {
   const { t } = useTranslation('common')
@@ -38,11 +39,18 @@ export const Timer: FC = () => {
       position: 'relative',
       width: ['calc(100vw - 2rem)', 'auto'],
     } }>
+      <Image
+        priority
+        src={ tomatoHero }
+        alt=""
+        aria-hidden
+      />
       <Text variant="display">
         { formatTime(time) }
       </Text>
       <Controls>
         <Button
+          variant="action"
           onClick={ onStopClick }
           disabled={ !isStarted }
           data-tracking-id="button-timer-done"
@@ -50,20 +58,13 @@ export const Timer: FC = () => {
           { t('done') }
         </Button>
         <Button
+          variant="action"
           onClick={ onToggleClick }
-          bg={ isRunning ? 'yellow' : 'green' }
           data-tracking-id={ isRunning ? 'button-timer-pause' : 'button-timer-start' }
         >
           { isRunning ? t('pause') : t('start') }
         </Button>
       </Controls>
-      <Donut
-        strokeWidth={ 1 }
-        size={ '100%' }
-        title={ t('progress', { progress: time / totalTime * 100 }) }
-        value={ time / totalTime }
-        role="progressbar"
-      />
     </Flex>
   )
 }

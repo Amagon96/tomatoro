@@ -1,15 +1,5 @@
 type Locale = 'en' | 'es'
 
-type Category = {
-  id: number
-  attributes: {
-    title: string
-    createdAt: string
-    updatedAt: string
-    locale: Locale
-  }
-}
-
 type Seo = {
   id: number
   metaTitle: string
@@ -49,36 +39,27 @@ type Image = {
   }
 }
 
-type CmsPageEntry = {
-  id: number
-  attributes: {
-    title: string
-    slug: string
-    content: string
-    createdAt: string
-    updatedAt: string
-    publishedAt: string
-    locale: Locale
-    hero: {
-      data: Image | null
-    }
-    seo: Seo | null
-    category: {
-      data: Category | null
-    }
+type PageContentBlocks = Array<
+  {
+    '__component': 'shared.rich-text',
+    id: number
+    body: string
   }
+>
+
+type BasicPage = {
+  id: string
+  blocks: PageContentBlocks
 }
 
-type Update = {
-  id: number
-  attributes: {
-    title: string
-    locale: string
-    publishedAt: string
-    createdAt: string
-    updatedAt: string
-    date: string
-  }
+type CmsArticleEntry = BasicPage & {
+  title: string
+  slug: string
+  content: string
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+  locale: Locale
 }
 
 type Banner = {
@@ -97,28 +78,6 @@ type Banner = {
 
 type Question = {
   id: number
-  attributes: {
-    question: string
-    locale: string
-    publishedAt: string
-    createdAt: string
-    updatedAt: string
-    content: string
-  }
-}
-
-type BasicPage = {
-  id: string
-  attributes: {
-    title: string
-    content: string
-    locale: Locale
-    publishedAt: string
-    createdAt: string
-    updatedAt: string
-    hero: {
-      data: Image | null
-    }
-    seo: Seo | null
-  }
+  question: string
+  blocks: PageContentBlocks
 }

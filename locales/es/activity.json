@@ -1,0 +1,9 @@
+{
+  "title": "Actividad",
+  "subtitle": "Mide tu productividad en tomates",
+  "segment": {
+    "work": "Ciclo de trabajo ({{count}})",
+    "short": "Descanso corto ({{count}})",
+    "long": "Descanso largo ({{count}})"
+  }
+}

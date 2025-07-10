@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
 
 import { useNotificationsContext } from '~/contexts/notifications'
+import { useUserContext } from '~/contexts/user'
 import { useIntervalsStore } from '~/stores/intervals'
 import { useSettingsStore } from '~/stores/settings'
 import { useTimerStore } from '~/stores/time'
@@ -35,6 +36,7 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     state.shortLength,
     state.longLength,
   ])
+  const { reportSegment } = useUserContext()
 
   const onTick = useCallback(() => {
     tick()
@@ -64,13 +66,14 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   useEffect(() => {
     if (time < 1 && isRunning) {
       onStopTimer()
+      reportSegment(currentSegment)
       addInterval({
         type: currentSegment,
       })
       notify(NOTIFICATION)
       trackEvent('TIMER_EXPIRED')
     }
-  }, [addInterval, currentSegment, isRunning, notify, onStopTimer, time])
+  }, [addInterval, currentSegment, isRunning, notify, onStopTimer, reportSegment, time])
 
   const onSegmentChange = useCallback((totalTime: number) => {
     setTotalTime(totalTime)
@@ -81,12 +84,10 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     if (currentSegment === 'WORK') {
       onSegmentChange(workLength)
       trackEvent('TIMER_SEGMENT_CHANGED', { segment: 'WORK' })
-    }
-    if (currentSegment === 'SHORT') {
+    } else if (currentSegment === 'SHORT') {
       onSegmentChange(shortLength)
       trackEvent('TIMER_SEGMENT_CHANGED', { segment: 'SHORT' })
-    }
-    if (currentSegment === 'LONG') {
+    } else if (currentSegment === 'LONG') {
       onSegmentChange(longLength)
       trackEvent('TIMER_SEGMENT_CHANGED', { segment: 'LONG' })
     }

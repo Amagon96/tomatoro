@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
-import { Button as _Button, Donut as _Donut, Flex } from 'theme-ui'
+import _Image from 'next/image'
+import { Button as _Button, Flex } from 'theme-ui'
 
-export const Donut = styled(_Donut)`
+export const Image = styled(_Image)`
+  height: 100%;
   position: absolute;
-  top: 0;
+  width: 100%;
   z-index: -1;
 `
 

@@ -12,6 +12,7 @@ import {
   NotificationsProvider,
 } from '~/contexts/notifications/notifications-context.provider'
 import { TimerProvider } from '~/contexts/timer'
+import { UsersProvider } from '~/contexts/user'
 import { useIntervalsStore } from '~/stores/intervals'
 import { init, trackEvent } from '~/utils/analytics'
 
@@ -55,11 +56,6 @@ export default function App ({ Component, pageProps }: AppProps) {
 
     if (router.isReady) {
       router.push(url, undefined, { shallow: true }).then()
-
-      // const utmSource = query.utm_source
-      // if (utmSource) {
-      //   console.log(utmSource)
-      // }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
@@ -84,13 +80,15 @@ export default function App ({ Component, pageProps }: AppProps) {
   return (
     <PostHogProvider client={ Posthog }>
       <ThemeUIProvider theme={ getTheme(theme) }>
-        <NotificationsProvider>
-          <TimerProvider>
-            { globalStyles }
-            {/* @ts-ignore */ }
-            <Component { ...pageProps } />
-          </TimerProvider>
-        </NotificationsProvider>
+        <UsersProvider>
+          <NotificationsProvider>
+            <TimerProvider>
+              { globalStyles }
+              {/* @ts-ignore */ }
+              <Component { ...pageProps } />
+            </TimerProvider>
+          </NotificationsProvider>
+        </UsersProvider>
       </ThemeUIProvider>
     </PostHogProvider>
   )

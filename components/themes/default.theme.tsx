@@ -13,6 +13,7 @@ const openSans = Open_Sans({
 })
 
 const maxWidth = '800px'
+const colorTransitionAnimationTime = 0.1
 
 export const defaultTheme: Theme = {
   fonts: {
@@ -32,8 +33,9 @@ export const defaultTheme: Theme = {
       fontFamily: 'body',
     },
     display: {
+      color: 'background',
       fontFamily: 'monospace',
-      fontSize: '5em',
+      fontSize: '6em',
       fontWeight: 'bold',
     },
     title: {
@@ -55,12 +57,24 @@ export const defaultTheme: Theme = {
       textAlign: 'left',
       lineHeight: '1.5em',
     },
+    muted: {
+      color: 'muted',
+      fontFamily: 'body',
+    },
+    nav: {
+      color: 'textMediumEmphasis',
+      fontWeight: 'normal',
+      '&:hover': {
+        color: 'primary',
+      },
+    },
   },
   colors: {
     contrastText: '#fff',
     textHighEmphasis: rgba('#000', 0.87),
     textMediumEmphasis: rgba('#000', 0.6),
     textLowEmphasis: rgba('#000', 0.38),
+    muted: rgba('#000', 0.15),
     background: '#fff',
     primary: '#DA3B1B',
     yellow: '#eab440',
@@ -72,7 +86,7 @@ export const defaultTheme: Theme = {
       fontFamily: 'body',
       minWidth: 'auto',
       height: 'max-content',
-      transition: 'background-color 0.15s ease-in-out, opacity 0.15s ease-in-out',
+      transition: `background-color ${colorTransitionAnimationTime}s ease-in-out, opacity ${colorTransitionAnimationTime}s ease-in-out`,
       willChange: 'background-color, opacity',
       '&:hover, &:focus, &:active': {
         bg: darken('primary', 0.2),
@@ -90,7 +104,7 @@ export const defaultTheme: Theme = {
       borderRadius: 0,
       padding: 1,
       fontFamily: 'body',
-      transition: 'background-color 0.15s ease-in-out, opacity 0.15s ease-in-out',
+      transition: `background-color ${colorTransitionAnimationTime}s ease-in-out, opacity ${colorTransitionAnimationTime}s ease-in-out`,
       willChange: 'background-color, opacity',
       '&:hover, &:focus, &:active': {
         opacity: 0.4,
@@ -108,6 +122,27 @@ export const defaultTheme: Theme = {
       '&:disabled': {
         opacity: 0.3,
         cursor: 'default',
+      },
+    },
+    action: {
+      color: 'primary',
+      bg: 'background',
+      cursor: 'pointer',
+      border: 'background 2px solid',
+      padding: 2,
+      fontFamily: 'body',
+      fontWeight: 'bold',
+      transition: `background-color ${colorTransitionAnimationTime}s ease-in-out, opacity ${colorTransitionAnimationTime}s ease-in-out`,
+      willChange: 'background-color, opacity',
+      '&:hover, &:focus, &:active': {
+        opacity: 0.6,
+      },
+      '&:disabled': {
+        bg: 'transparent',
+        color: 'background',
+        fontWeight: 'normal',
+        opacity: 1,
+        cursor: 'not-allowed',
       },
     },
   },
@@ -198,6 +233,12 @@ export const defaultTheme: Theme = {
       borderColor: '#eee',
       maxWidth,
       mx: 'auto',
+    },
+    contained: {
+      mx: 'auto',
+      maxWidth,
+      padding: '1em',
+      width: '100%',
     },
   },
 }

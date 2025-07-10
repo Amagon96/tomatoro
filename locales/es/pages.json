@@ -1,5 +1,21 @@
 {
   "news": {
     "title": "Actualizaciones"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "cta": "Iniciar sesión"
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "greeting": "Hola, {{name}}!"
+  },
+  "blog": {
+    "title": "Conoce nuestro blog"
+  },
+  "help": {
+    "title": "Centro de ayuda"
   }
 }

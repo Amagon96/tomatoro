@@ -4,6 +4,7 @@ import useTranslation from 'next-translate/useTranslation'
 import React, { FC, useMemo } from 'react'
 import { Flex, Heading, NavLink, Text } from 'theme-ui'
 
+import { LanguageSelector } from '~/components/molecules/language-selector'
 import { LINKS, PAGES } from '~/utils/config'
 
 import { Container, section, Section } from './footer.styles'
@@ -18,12 +19,10 @@ export const Footer: FC<Props> = ({ version }) => {
   const { t } = useTranslation('common')
 
   const footerData = useMemo(() => {
-    // @ts-ignore
-    const pagesForLocale = PAGES[locale]
+    const pagesForLocale = PAGES[locale as keyof typeof PAGES]
 
     const siteItems: FooterLink[] = [
       { key: 'blog', href: pagesForLocale.BLOG },
-      { key: 'news', href: LINKS.NEWS },
       { key: 'terms', href: pagesForLocale.TERMS },
       { key: 'privacy', href: pagesForLocale.PRIVACY },
       { key: 'github', href: LINKS.GITHUB },
@@ -77,6 +76,9 @@ export const Footer: FC<Props> = ({ version }) => {
             )) }
           </Section>
         )) }
+      </Flex>
+      <Flex sx={ { ...section, color: 'textMediumEmphasis', justifyContent: 'flex-end' } }>
+        <LanguageSelector />
       </Flex>
       <Flex sx={ section }>
         <Flex sx={ { flexDirection: 'column' } }>

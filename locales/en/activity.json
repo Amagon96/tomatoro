@@ -1,0 +1,9 @@
+{
+  "title": "Activity",
+  "subtitle": "Measure your productivity in tomatoes",
+  "segment": {
+    "work": "Work cycle ({{count}})",
+    "short": "Short break ({{count}})",
+    "long": "Long break ({{count}})"
+  }
+}

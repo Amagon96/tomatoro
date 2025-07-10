@@ -52,7 +52,6 @@ export const PAGES = {
     HOW_IT_WORKS: '/how-it-works',
     CONTACT: '/contact',
     DASHBOARD: '/dashboard',
-    PRICING: '/pricing',
     BLOG: '/blog',
     HELP: '/help',
   },
@@ -71,7 +70,6 @@ export const PAGES = {
 
 export const LINKS = {
   HOME: '/',
-  NEWS: '/news',
   SUPPORT: 'mailto:hello@tomatoro.com',
   GITHUB: 'https://github.com/tonymtz/tomatoro',
   FEEDBACK: 'https://goo.gl/forms/T9BxmGcn38dlZz2w1',
@@ -82,6 +80,10 @@ export const LINKS = {
   SONGBOX: 'https://songbox.io',
   GATOLINERO: 'https://t.me/GatolineroBot',
   MITRABAJO: 'https://eslegalmitrabajo.com',
+  REGISTER: '/register',
+  LOGIN: '/login',
+  DASHBOARD: '/dashboard',
+  LOGOUT: '/api/auth/logout',
 }
 
 export const CMS_URL = 'https://cms.tomatoro.com/api'

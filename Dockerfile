@@ -1,11 +1,12 @@
-FROM node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:20-alpine AS deps
+RUN corepack enable && corepack prepare pnpm@10.12.4 --activate
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN  npm install
+COPY package.json pnpm-lock.yaml ./
+RUN  pnpm install
 
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
+RUN corepack enable && corepack prepare pnpm@10.12.4 --activate
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -15,11 +16,14 @@ ARG NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
 ARG NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST
 ARG NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_CMS_API_KEY=$NEXT_PUBLIC_CMS_API_KEY
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ARG SENTRY_DSN=$SENTRY_DSN
 
-RUN npm run build
+RUN pnpm run build
 
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
+RUN corepack enable && corepack prepare pnpm@10.12.4 --activate
 WORKDIR /app
 
 ENV NODE_ENV production
@@ -28,6 +32,8 @@ ARG NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
 ARG NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST
 ARG NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_CMS_API_KEY=$NEXT_PUBLIC_CMS_API_KEY
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ARG SENTRY_DSN=$SENTRY_DSN
 
 RUN addgroup --system --gid 1001 nodejs
@@ -47,4 +53,4 @@ EXPOSE 80
 
 ENV PORT 80
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
