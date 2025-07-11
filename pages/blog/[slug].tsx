@@ -2,13 +2,13 @@ import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
 import { usePostHog } from 'posthog-js/react'
 import React from 'react'
-import { Box, Grid } from 'theme-ui'
+import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { PageRating } from '~/components/organisms/page-rating'
 import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
-import { CmsArticle } from '~/components/templates/cms-article'
+import { RenderCmsArticleBlocks } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import { getArticleBySlug } from '~/utils/cms.api'
 
@@ -41,14 +41,15 @@ export default function PostBySlug ({ article }: { article: CmsArticleEntry }) {
   }
 
   return (
-    <Page isWrapped>
+    <Page seo={ article.seo } isWrapped>
       <Grid variant="contained"
         sx={ {
           gap: 3,
           lineHeight: 2,
           justifyItems: 'start',
         } }>
-        <CmsArticle article={article} />
+        <Heading as="h1">{ article.title }</Heading>
+        <RenderCmsArticleBlocks blocks={ article.blocks }/>
         { isClient && isPageRatingWidgetEnabled && (
           <Box sx={ { my: 5 } }>
             <PageRating pageId={ article.slug }/>

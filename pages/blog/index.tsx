@@ -22,7 +22,7 @@ export default function Blog ({ articles }: { articles: CmsArticleEntry[] }) {
   const { t } = useTranslation('pages')
 
   return (
-    <Page subtitle="Articles" isWrapped>
+    <Page subtitle={ t('blog.title') } isWrapped>
       <Grid variant="contained">
         <Heading as="h1">{ t('blog.title') }</Heading>
 

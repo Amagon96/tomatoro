@@ -29,11 +29,11 @@ export default function HelpCenter ({ articles }: { articles: CmsArticleEntry[] 
   const { t } = useTranslation('pages')
 
   return (
-    <Page subtitle="Articles" isWrapped>
+    <Page subtitle={ t('help.title') } isWrapped>
       <Grid variant="contained">
         <Heading as="h1">{ t('help.title') }</Heading>
 
-        <ArticlesList articles={ articles } path={ LOCALE_TO_PATH[locale as Locale] } />
+        <ArticlesList articles={ articles } path={ LOCALE_TO_PATH[locale as Locale] }/>
       </Grid>
     </Page>
   )

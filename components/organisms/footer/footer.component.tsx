@@ -37,9 +37,8 @@ export const Footer: FC<Props> = ({ version }) => {
 
     const toolItems: FooterLink[] = [
       { key: 'tomatoro', href: LINKS.TOMATORO },
-      { key: 'mitrabajo', href: LINKS.MITRABAJO },
       { key: 'dolar', href: LINKS.DOLAR },
-      { key: 'gatolinero', href: LINKS.GATOLINERO },
+      { key: 'mitrabajo', href: LINKS.MITRABAJO },
     ]
 
     return {

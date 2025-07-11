@@ -2,14 +2,14 @@ import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
 import { usePostHog } from 'posthog-js/react'
 import React from 'react'
-import { Box, Grid } from 'theme-ui'
+import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { QuestionCard } from '~/components/atoms/question-card'
 import { PageRating } from '~/components/organisms/page-rating'
 import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
-import { CmsArticle } from '~/components/templates/cms-article'
+import { RenderCmsArticleBlocks } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import { getArticleBySlug, getQuestions } from '~/utils/cms.api'
 import { createFaqStructuredData } from '~/utils/structured-data.utils'
@@ -49,6 +49,7 @@ export default function Faq ({ page, questions }: RouteProps) {
     <Page
       isWrapped
       seo={ {
+        ...page.seo,
         structuredData: JSON.stringify(createFaqStructuredData(questions)),
       } }
     >
@@ -59,7 +60,8 @@ export default function Faq ({ page, questions }: RouteProps) {
           lineHeight: 2,
           justifyItems: 'start',
         } }>
-        <CmsArticle article={ page }/>
+        <Heading as="h1">{ page.title }</Heading>
+        <RenderCmsArticleBlocks blocks={ page.blocks }/>
 
         { sortedQuestions.map((question) => (
           <QuestionCard key={ question.question }
