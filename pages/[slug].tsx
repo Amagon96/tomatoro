@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { GetStaticProps } from 'next'
 import { usePostHog } from 'posthog-js/react'
 import React from 'react'
-import { Box, Grid } from 'theme-ui'
+import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
@@ -57,13 +57,14 @@ export default function PageBySlug ({ article, slug }: { article: BasicPage, slu
   }
 
   return (
-    <Page isWrapped>
+    <Page seo={ article.seo } isWrapped>
       <Grid variant="contained"
         sx={ {
           gap: 3,
           lineHeight: 2,
           justifyItems: 'start',
         } }>
+        <Heading as="h1">{ article.title }</Heading>
         <CmsArticle article={ article }/>
         { isClient && isPageRatingWidgetEnabled && (
           <Box sx={ { my: 5 } }>

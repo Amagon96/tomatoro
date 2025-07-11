@@ -29,7 +29,7 @@ export const getArticleBySlug = async (slug: string, locale?: string) => {
   }
 
   const localeParam = locale ? `&locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[0]=blocks${ localeParam }`)
+  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[]=blocks&populate[]=seo${ localeParam }`)
 
   return obj.data[0]
 }

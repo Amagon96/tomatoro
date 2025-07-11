@@ -4,14 +4,9 @@ type Seo = {
   id: number
   metaTitle: string
   metaDescription: string
-  keywords: string
-  metaRobots: string
-  structuredData: string
-  metaViewport: string
   canonicalURL: string
-  metaImage: {
-    data: Image | null
-  }
+  structuredData: string
+  keywords: string
 }
 
 type Format = {
@@ -47,13 +42,15 @@ type PageContentBlocks = Array<
   }
 >
 
+// TODO merge with CmsArticleEntry
 type BasicPage = {
   id: string
+  title: string
   blocks: PageContentBlocks
+  seo?: Seo
 }
 
 type CmsArticleEntry = BasicPage & {
-  title: string
   slug: string
   content: string
   createdAt: string
