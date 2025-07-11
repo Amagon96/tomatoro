@@ -9,7 +9,7 @@ import { BackCta } from '~/components/atoms/back-cta'
 import { QuestionCard } from '~/components/atoms/question-card'
 import { PageRating } from '~/components/organisms/page-rating'
 import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
-import { CmsArticle } from '~/components/templates/cms-article'
+import { RenderCmsArticleBlocks } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import { getArticleBySlug, getQuestions } from '~/utils/cms.api'
 import { createFaqStructuredData } from '~/utils/structured-data.utils'
@@ -61,7 +61,7 @@ export default function Faq ({ page, questions }: RouteProps) {
           justifyItems: 'start',
         } }>
         <Heading as="h1">{ page.title }</Heading>
-        <CmsArticle article={ page }/>
+        <RenderCmsArticleBlocks blocks={ page.blocks }/>
 
         { sortedQuestions.map((question) => (
           <QuestionCard key={ question.question }

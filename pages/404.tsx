@@ -5,13 +5,14 @@ import React from 'react'
 import { Flex, Grid } from 'theme-ui'
 
 import { BackCta } from '~/components/atoms/back-cta'
-import { CmsArticle } from '~/components/templates/cms-article'
+import { RenderCmsArticleBlocks } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import graphicTakeBreak from '~/public/svg/graphic-take-break.svg'
 import { getArticleBySlug } from '~/utils/cms.api'
 
 const fallbackPage: BasicPage = {
   id: 'fallback',
+  title: 'Oops! 🍅 Time\'s Up!',
   blocks: [
     {
       __component: 'shared.rich-text',
@@ -44,7 +45,7 @@ export default function Custom404 ({ article }: { article: BasicPage }) {
     <Page subtitle="404" isWrapped>
       <Grid variant="contained" columns={ 2 }>
         <Grid gap={ 3 } sx={ { justifyItems: 'start' } }>
-          <CmsArticle article={ article }/>
+          <RenderCmsArticleBlocks blocks={ article.blocks }/>
           <BackCta/>
         </Grid>
         <Flex sx={ { justifyContent: 'center' } }>

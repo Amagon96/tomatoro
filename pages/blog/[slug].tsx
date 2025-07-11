@@ -8,7 +8,7 @@ import { useIsClient } from 'usehooks-ts'
 import { BackCta } from '~/components/atoms/back-cta'
 import { PageRating } from '~/components/organisms/page-rating'
 import { SubscribeWidget } from '~/components/organisms/subscribe-widget'
-import { CmsArticle } from '~/components/templates/cms-article'
+import { RenderCmsArticleBlocks } from '~/components/templates/cms-article'
 import { Page } from '~/components/templates/page'
 import { getArticleBySlug } from '~/utils/cms.api'
 
@@ -41,7 +41,7 @@ export default function PostBySlug ({ article }: { article: CmsArticleEntry }) {
   }
 
   return (
-    <Page seo={article.seo} isWrapped>
+    <Page seo={ article.seo } isWrapped>
       <Grid variant="contained"
         sx={ {
           gap: 3,
@@ -49,7 +49,7 @@ export default function PostBySlug ({ article }: { article: CmsArticleEntry }) {
           justifyItems: 'start',
         } }>
         <Heading as="h1">{ article.title }</Heading>
-        <CmsArticle article={article} />
+        <RenderCmsArticleBlocks blocks={ article.blocks }/>
         { isClient && isPageRatingWidgetEnabled && (
           <Box sx={ { my: 5 } }>
             <PageRating pageId={ article.slug }/>
