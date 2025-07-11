@@ -10,12 +10,26 @@ type LocalizedCmsEntry = CmsEntry & {
   locale: Locale
 }
 
+type CloudinaryImage = {
+  height: number
+  width: number
+  url: string
+}
+
 type Seo = LocalizedCmsEntry & {
   metaTitle: string
   metaDescription: string
   canonicalURL: string
   structuredData: string
   keywords: string
+  shareImage: CloudinaryImage & {
+    formats: {
+      thumbnail: CloudinaryImage
+      small: CloudinaryImage
+      medium: CloudinaryImage
+      large: CloudinaryImage
+    }
+  }
 }
 
 type PageContentBlocks = Array<
