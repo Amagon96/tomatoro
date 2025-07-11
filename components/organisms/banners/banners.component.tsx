@@ -30,7 +30,7 @@ export const Banners: FC<Props> = ({ banners }) => {
         !seenBanners[banner.id] && (
           <Alert key={ banner.id }>
             <RichTextRenderer
-              content={ banner.attributes.content }
+              content={ banner.content }
               overrides={ {
                 a: {
                   borderWidth: 2,

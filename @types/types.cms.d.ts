@@ -1,37 +1,21 @@
 type Locale = 'en' | 'es'
 
-type Seo = {
-  id: number
+type CmsEntry = {
+  id: number,
+  createdAt: string
+  updatedAt: string
+}
+
+type LocalizedCmsEntry = CmsEntry & {
+  locale: Locale
+}
+
+type Seo = LocalizedCmsEntry & {
   metaTitle: string
   metaDescription: string
   canonicalURL: string
   structuredData: string
   keywords: string
-}
-
-type Format = {
-  url: string
-  width: number
-  height: number
-  mime: number
-}
-
-type Image = {
-  id: number
-  attributes: {
-    name: string
-    alternativeText: string
-    caption: string
-    width: number
-    height: number
-    url: string
-    formats: {
-      thumbnail?: Format
-      small?: Format
-      medium?: Format
-      large?: Format
-    }
-  }
 }
 
 type PageContentBlocks = Array<
@@ -42,39 +26,20 @@ type PageContentBlocks = Array<
   }
 >
 
-// TODO merge with CmsArticleEntry
-type BasicPage = {
-  id: string
+type CmsArticleEntry = LocalizedCmsEntry & {
   title: string
   blocks: PageContentBlocks
   seo?: Seo
-}
-
-type CmsArticleEntry = BasicPage & {
   slug: string
-  content: string
-  createdAt: string
-  updatedAt: string
   publishedAt: string
-  locale: Locale
 }
 
-type Banner = {
+type Banner = LocalizedCmsEntry & {
   id: number
-  attributes: {
-    content: string
-    start: string
-    end: string
-    location: string
-    locale: string
-    publishedAt: string
-    createdAt: string
-    updatedAt: string
-  }
+  content: string
 }
 
-type Question = {
-  id: number
+type Question = LocalizedCmsEntry & {
   question: string
   blocks: PageContentBlocks
 }
