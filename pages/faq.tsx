@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { GetServerSideProps } from 'next'
 import { usePostHog } from 'posthog-js/react'
 import React from 'react'
-import { Box, Grid } from 'theme-ui'
+import { Box, Grid, Heading } from 'theme-ui'
 import { useIsClient } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
@@ -49,6 +49,7 @@ export default function Faq ({ page, questions }: RouteProps) {
     <Page
       isWrapped
       seo={ {
+        ...page.seo,
         structuredData: JSON.stringify(createFaqStructuredData(questions)),
       } }
     >
@@ -59,6 +60,7 @@ export default function Faq ({ page, questions }: RouteProps) {
           lineHeight: 2,
           justifyItems: 'start',
         } }>
+        <Heading as="h1">{ page.title }</Heading>
         <CmsArticle article={ page }/>
 
         { sortedQuestions.map((question) => (
