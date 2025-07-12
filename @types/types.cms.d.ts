@@ -11,6 +11,15 @@ type LocalizedCmsEntry = CmsEntry & {
 }
 
 type CloudinaryImage = {
+  mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'image/jpg'
+  height: number
+  width: number
+  url: string
+  alternativeText: string | null
+}
+
+type CloudinaryVideo = {
+  mime: 'video/mp4'
   height: number
   width: number
   url: string
@@ -49,7 +58,13 @@ type CmsSharedSliderBlock = {
   }>
 }
 
-type PageContentBlocks = Array<CmsSharedRichTextBlock | CmsSharedSliderBlock>
+type CmsSharedMediaBlock = {
+  '__component': 'shared.media',
+  id: number
+  file: CloudinaryImage | CloudinaryVideo
+}
+
+type PageContentBlocks = Array<CmsSharedRichTextBlock | CmsSharedSliderBlock | CmsSharedMediaBlock>
 
 type CmsArticleEntry = LocalizedCmsEntry & {
   title: string

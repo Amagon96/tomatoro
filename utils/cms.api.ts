@@ -28,8 +28,11 @@ export const getArticleBySlug = async (slug: string, locale?: string) => {
     throw new Error('Invalid slug')
   }
 
-  // eslint-disable-next-line max-len
-  const populateBlocks = '&populate[blocks][on][shared.rich-text][populate]=*&populate[blocks][on][shared.slider][populate]=*'
+  const populateBlocks = [
+    '&populate[blocks][on][shared.rich-text][populate]=*',
+    '&populate[blocks][on][shared.slider][populate]=*',
+    '&populate[blocks][on][shared.media][populate]=*',
+  ].join('')
   const populateSeo = '&populate[seo][populate]=shareImage'
   const localeParam = locale ? `&locale=${ locale }` : ''
   const url = `${ CMS_URL }/articles?filters[slug][$eq]=${ slug }${ populateBlocks }${ populateSeo }${ localeParam }`

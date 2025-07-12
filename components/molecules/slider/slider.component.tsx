@@ -11,7 +11,7 @@ export const Slider: FC<Props> = ({ sliderBlock }) => {
   return (
     <Box sx={ { py: 5 } }>
       <Heading as="h2">{ sliderBlock.title }</Heading>
-      <Flex sx={ { gap: 4 } }>
+      <Flex sx={ { gap: 4, mt: 4 } }>
         { sliderBlock.quotes.map((quote) => (
           <Card key={ quote.id } sx={ { p: 4, flex: '1 1 auto' } }>
             <Box mb={ 3 }>
