@@ -44,7 +44,6 @@ export const defaultTheme: Theme = {
     },
     paragraph: {
       color: 'textMediumEmphasis',
-      textAlign: 'justify',
       lineHeight: '1.75em',
     },
     invertedParagraph: {

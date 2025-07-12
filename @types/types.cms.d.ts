@@ -32,13 +32,24 @@ type Seo = LocalizedCmsEntry & {
   }
 }
 
-type PageContentBlocks = Array<
-  {
-    '__component': 'shared.rich-text',
+type CmsSharedRichTextBlock = {
+  '__component': 'shared.rich-text',
+  id: number
+  body: string
+}
+
+type CmsSharedSliderBlock = {
+  '__component': 'shared.slider',
+  id: number
+  title: string
+  quotes: Array<{
     id: number
+    title: string
     body: string
-  }
->
+  }>
+}
+
+type PageContentBlocks = Array<CmsSharedRichTextBlock | CmsSharedSliderBlock>
 
 type CmsArticleEntry = LocalizedCmsEntry & {
   title: string
