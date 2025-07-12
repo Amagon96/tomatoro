@@ -81,5 +81,5 @@ type Banner = LocalizedCmsEntry & {
 
 type Question = LocalizedCmsEntry & {
   question: string
-  blocks: PageContentBlocks
+  blocks: Array<CmsSharedRichTextBlock>
 }
