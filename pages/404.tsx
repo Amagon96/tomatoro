@@ -10,8 +10,9 @@ import { Page } from '~/components/templates/page'
 import graphicTakeBreak from '~/public/svg/graphic-take-break.svg'
 import { getArticleBySlug } from '~/utils/cms.api'
 
-const fallbackPage: BasicPage = {
-  id: 'fallback',
+const today = new Date().toISOString()
+const fallbackPage: CmsArticleEntry = {
+  id: -1,
   title: 'Oops! 🍅 Time\'s Up!',
   blocks: [
     {
@@ -20,14 +21,19 @@ const fallbackPage: BasicPage = {
       body: '# Oops! 🍅 Time\'s Up!\nWe couldn\'t find the page you\'re looking for.\n\nLet\'s get you back on track!\n',
     },
   ],
+  slug: 'error-404',
+  createdAt: today,
+  updatedAt: today,
+  publishedAt: today,
+  locale: 'en',
 }
 
 export const getStaticProps: GetStaticProps<
-  { article: BasicPage },
+  { article: CmsArticleEntry },
   {}
 > = async ({ locale }) => {
   try {
-    let article: BasicPage = await getArticleBySlug('error-404', locale)
+    let article: CmsArticleEntry = await getArticleBySlug('error-404', locale)
 
     if (!article) {
       article = fallbackPage
@@ -40,7 +46,7 @@ export const getStaticProps: GetStaticProps<
   }
 }
 
-export default function Custom404 ({ article }: { article: BasicPage }) {
+export default function Custom404 ({ article }: { article: CmsArticleEntry }) {
   return (
     <Page subtitle="404" isWrapped>
       <Grid variant="contained" columns={ 2 }>

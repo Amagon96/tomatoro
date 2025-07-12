@@ -26,7 +26,7 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<
-  { article: BasicPage },
+  { article: CmsArticleEntry },
   { slug: string }
 > = async ({ locale, params }) => {
   try {
@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps<
   }
 }
 
-export default function PageBySlug ({ article, slug }: { article: BasicPage, slug: string }) {
+export default function PageBySlug ({ article, slug }: { article: CmsArticleEntry, slug: string }) {
   const isClient = useIsClient()
   const posthog = usePostHog()
   const isSubscriptionWidgetEnabled = posthog.isFeatureEnabled('subscription-widget')

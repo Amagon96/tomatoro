@@ -28,9 +28,15 @@ export const getArticleBySlug = async (slug: string, locale?: string) => {
     throw new Error('Invalid slug')
   }
 
+  const populateBlocks = [
+    '&populate[blocks][on][shared.rich-text][populate]=*',
+    '&populate[blocks][on][shared.slider][populate]=*',
+    '&populate[blocks][on][shared.media][populate]=*',
+  ].join('')
+  const populateSeo = '&populate[seo][populate]=shareImage'
   const localeParam = locale ? `&locale=${ locale }` : ''
-  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(`${ CMS_URL }/articles?filters[slug][$eq]=${ slug }&populate[]=blocks&populate[]=seo${ localeParam }`)
-
+  const url = `${ CMS_URL }/articles?filters[slug][$eq]=${ slug }${ populateBlocks }${ populateSeo }${ localeParam }`
+  const { data: obj } = await axios.get<CmsResponse<CmsArticleEntry>>(url)
   return obj.data[0]
 }
 

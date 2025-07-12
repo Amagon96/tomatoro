@@ -1,80 +1,85 @@
 type Locale = 'en' | 'es'
 
-type Seo = {
-  id: number
+type CmsEntry = {
+  id: number,
+  createdAt: string
+  updatedAt: string
+}
+
+type LocalizedCmsEntry = CmsEntry & {
+  locale: Locale
+}
+
+type CloudinaryImage = {
+  mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' | 'image/jpg'
+  height: number
+  width: number
+  url: string
+  alternativeText: string | null
+}
+
+type CloudinaryVideo = {
+  mime: 'video/mp4'
+  height: number
+  width: number
+  url: string
+}
+
+type Seo = LocalizedCmsEntry & {
   metaTitle: string
   metaDescription: string
   canonicalURL: string
   structuredData: string
   keywords: string
-}
-
-type Format = {
-  url: string
-  width: number
-  height: number
-  mime: number
-}
-
-type Image = {
-  id: number
-  attributes: {
-    name: string
-    alternativeText: string
-    caption: string
-    width: number
-    height: number
-    url: string
+  shareImage: CloudinaryImage & {
     formats: {
-      thumbnail?: Format
-      small?: Format
-      medium?: Format
-      large?: Format
+      thumbnail: CloudinaryImage
+      small: CloudinaryImage
+      medium: CloudinaryImage
+      large: CloudinaryImage
     }
   }
 }
 
-type PageContentBlocks = Array<
-  {
-    '__component': 'shared.rich-text',
-    id: number
-    body: string
-  }
->
+type CmsSharedRichTextBlock = {
+  '__component': 'shared.rich-text',
+  id: number
+  body: string
+}
 
-// TODO merge with CmsArticleEntry
-type BasicPage = {
-  id: string
+type CmsSharedSliderBlock = {
+  '__component': 'shared.slider',
+  id: number
+  title: string
+  quotes: Array<{
+    id: number
+    title: string
+    body: string
+  }>
+}
+
+type CmsSharedMediaBlock = {
+  '__component': 'shared.media',
+  id: number
+  file: CloudinaryImage | CloudinaryVideo
+}
+
+type PageContentBlocks = Array<CmsSharedRichTextBlock | CmsSharedSliderBlock | CmsSharedMediaBlock>
+
+type CmsArticleEntry = LocalizedCmsEntry & {
   title: string
   blocks: PageContentBlocks
   seo?: Seo
-}
-
-type CmsArticleEntry = BasicPage & {
   slug: string
-  content: string
-  createdAt: string
-  updatedAt: string
   publishedAt: string
-  locale: Locale
 }
 
-type Banner = {
+type Banner = LocalizedCmsEntry & {
   id: number
-  attributes: {
-    content: string
-    start: string
-    end: string
-    location: string
-    locale: string
-    publishedAt: string
-    createdAt: string
-    updatedAt: string
-  }
+  content: string
 }
 
-type Question = {
-  id: number
+type Question = LocalizedCmsEntry & {
   question: string
-  blocks: PageContentBlocks
+  blocks: Array<CmsSharedRichTextBlock>
 }

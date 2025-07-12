@@ -43,7 +43,7 @@ export const Page: FC<PageProps> = ({
 
   const description = seo?.metaDescription || SEO.description
   const keywords = seo?.keywords || SEO.keywords
-  const image = SEO.image
+  const image = seo?.shareImage?.url || SEO.image
   const url = SEO.url + cleanPath
   const metaRobots = 'index, follow'
   const canonicalUrl = seo?.canonicalURL
