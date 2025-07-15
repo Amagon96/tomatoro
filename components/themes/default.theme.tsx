@@ -45,6 +45,10 @@ export const defaultTheme: Theme = {
     paragraph: {
       color: 'textMediumEmphasis',
       lineHeight: '1.75em',
+
+      '& > img': {
+        maxWidth,
+      },
     },
     invertedParagraph: {
       color: 'contrastText',
