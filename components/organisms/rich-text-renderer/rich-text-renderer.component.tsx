@@ -21,9 +21,9 @@ export const RichTextRenderer: FC<Props> = ({ content, overrides }) => {
     <ReactMarkdown components={ {
       h1: (props) => <Heading as="h1">{ props.children }</Heading>,
       h2: (props) => <Heading as="h2">{ props.children }</Heading>,
-      p: (props) => <Paragraph sx={safeOverrides.p}>{ props.children }</Paragraph>,
+      p: (props) => <Paragraph sx={ safeOverrides.p }>{ props.children }</Paragraph>,
       li: (props) => <li><Paragraph>{ props.children }</Paragraph></li>,
-      a: (props) => <Link href={ props.href } sx={safeOverrides.a}>{ props.children }</Link>,
+      a: (props) => <Link href={ props.href } sx={ safeOverrides.a }>{ props.children }</Link>,
       hr: () => <Divider sx={ { my: 4, width: '100%' } }/>,
     } }>
       { content }
