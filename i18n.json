@@ -6,7 +6,8 @@
     "/blog": ["pages"],
     "/help": ["pages"],
     "/news": ["pages"],
-    "/login": ["pages"],
+    "/auth/login": ["auth"],
+    "/auth/register": ["auth"],
     "/dashboard": ["pages", "activity"],
     "/": ["home", "timer"],
     "/about": ["about"]

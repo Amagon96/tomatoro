@@ -3,7 +3,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { usePostHog } from 'posthog-js/react'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button, Flex, Grid, Heading, Input, Paragraph } from 'theme-ui'
+import { Box, Button, Card, Flex, Heading, Input, Paragraph } from 'theme-ui'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { Page } from '~/components/templates/page'
@@ -17,7 +17,7 @@ type Inputs = {
 export default function LoginPage () {
   const router = useRouter()
   const supabase = createClient()
-  const { t } = useTranslation('pages')
+  const { t } = useTranslation('auth')
   const posthog = usePostHog()
   const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
 
@@ -54,31 +54,37 @@ export default function LoginPage () {
   }
 
   return isUserActivityEnabled && (
-    <Page subtitle={ t('login.title') } isWrapped>
-      <Grid variant="contained" sx={ { justifyItems: 'start' } }>
-        <Heading as="h1">{ t('login.title') }</Heading>
+    <Page subtitle={ t('login.title') } noHeader noFooter>
+      <Box sx={ { maxWidth: 400, mx: 'auto', px: 3, py: 4 } }>
+        <Card>
+          <Heading as="h1" sx={ { pb: 3 } }>{ t('login.title') }</Heading>
 
-        <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(logIn) }>
-          <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
-            <Input
-              placeholder={ t('login.email') }
-              { ...register('email', { required: true }) }
-            />
-            { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
-          </Flex>
-          <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
-            <Input
-              placeholder={ t('login.password') }
-              type="password"
-              { ...register('password', { required: true }) }
-            />
-            { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
-          </Flex>
-          <Button type="submit">{ t('login.cta') }</Button>
-        </Flex>
+          <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(logIn) }>
+            <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
+              <Input
+                placeholder={ t('login.email') }
+                { ...register('email', { required: true }) }
+              />
+              { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+            </Flex>
 
-        <BackCta/>
-      </Grid>
+            <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
+              <Input
+                placeholder={ t('login.password') }
+                type="password"
+                { ...register('password', { required: true }) }
+              />
+              { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+            </Flex>
+
+            <Button type="submit">{ t('login.cta') }</Button>
+
+            <div>
+              <BackCta/>
+            </div>
+          </Flex>
+        </Card>
+      </Box>
     </Page>
   )
 }
