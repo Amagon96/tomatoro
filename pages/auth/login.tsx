@@ -1,12 +1,14 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import { usePostHog } from 'posthog-js/react'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Card, Flex, Heading, Input, Paragraph } from 'theme-ui'
+import { Box, Button, Card, Flex, Heading, Input, Link as TuiLink, Message, Paragraph } from 'theme-ui'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { Page } from '~/components/templates/page'
+import { LINKS } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
 
 type Inputs = {
@@ -20,6 +22,7 @@ export default function LoginPage () {
   const { t } = useTranslation('auth')
   const posthog = usePostHog()
   const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
+  const [serverError, setServerError] = React.useState<string | null>(null)
 
   useEffect(() => {
     if (!isUserActivityEnabled) {
@@ -28,7 +31,7 @@ export default function LoginPage () {
   })
 
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
   } = useForm<Inputs>()
@@ -36,21 +39,12 @@ export default function LoginPage () {
   async function logIn ({ email, password }: Inputs) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      console.error(error)
+    if (!error) {
+      await router.push('/dashboard')
+      return
     }
 
-    router.push('/dashboard')
-  }
-
-  async function signUp ({ email, password }: Inputs) {
-    const { error } = await supabase.auth.signUp({ email, password })
-
-    if (error) {
-      console.error(error)
-    }
-
-    router.push('/')
+    setServerError(error.code!)
   }
 
   return isUserActivityEnabled && (
@@ -60,12 +54,14 @@ export default function LoginPage () {
           <Heading as="h1" sx={ { pb: 3 } }>{ t('login.title') }</Heading>
 
           <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(logIn) }>
+            { serverError && <Message>{ t(`error.${ serverError }`) }</Message> }
+
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
               <Input
                 placeholder={ t('login.email') }
                 { ...register('email', { required: true }) }
               />
-              { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+              { errors.email && <Paragraph variant="small">{ t('error.email') }</Paragraph> }
             </Flex>
 
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
@@ -74,10 +70,14 @@ export default function LoginPage () {
                 type="password"
                 { ...register('password', { required: true }) }
               />
-              { errors.email && <Paragraph variant="small">{ t('error') }</Paragraph> }
+              { errors.password && <Paragraph variant="small">{ t('error.password') }</Paragraph> }
             </Flex>
 
-            <Button type="submit">{ t('login.cta') }</Button>
+            <Button type="submit" disabled={ isSubmitting }>{ t('login.cta') }</Button>
+
+            <div>
+              <TuiLink as={ Link } href={ LINKS.REGISTER }>{ t('login.signUp') }</TuiLink>
+            </div>
 
             <div>
               <BackCta/>
