@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import { usePostHog } from 'posthog-js/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Box, Button, Card, Flex, Heading, Input, Link as TuiLink, Message, Paragraph } from 'theme-ui'
 
@@ -20,21 +19,15 @@ export default function LoginPage () {
   const router = useRouter()
   const supabase = createClient()
   const { t } = useTranslation('auth')
-  const posthog = usePostHog()
-  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
   const [serverError, setServerError] = React.useState<string | null>(null)
-
-  useEffect(() => {
-    if (!isUserActivityEnabled) {
-      router.push('/')
-    }
-  })
 
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    mode: 'onBlur',
+  })
 
   async function logIn ({ email, password }: Inputs) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
@@ -47,7 +40,7 @@ export default function LoginPage () {
     setServerError(error.code!)
   }
 
-  return isUserActivityEnabled && (
+  return (
     <Page subtitle={ t('login.title') } noHeader noFooter>
       <Box sx={ { maxWidth: 400, mx: 'auto', px: 3, py: 4 } }>
         <Card>

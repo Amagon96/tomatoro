@@ -1,12 +1,13 @@
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import useTranslation from 'next-translate/useTranslation'
-import { usePostHog } from 'posthog-js/react'
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Card, Flex, Heading, Input, Paragraph } from 'theme-ui'
+import { Box, Button, Card, Flex, Heading, Input, Link as TuiLink, Message, Paragraph } from 'theme-ui'
+import { useBoolean } from 'usehooks-ts'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { Page } from '~/components/templates/page'
+import { LINKS } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
 
 type Inputs = {
@@ -16,42 +17,44 @@ type Inputs = {
 }
 
 export default function RegisterPage () {
-  const router = useRouter()
   const supabase = createClient()
   const { t } = useTranslation('auth')
-  const posthog = usePostHog()
-  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
-
-  useEffect(() => {
-    if (!isUserActivityEnabled) {
-      router.push('/')
-    }
-  })
+  const [serverError, setServerError] = useState<string | null>(null)
+  const { setTrue, value: isSuccess } = useBoolean()
 
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
+    reset,
     watch,
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    mode: 'onBlur',
+  })
 
   async function signUp ({ email, password }: Inputs) {
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { error: signUpError } = await supabase.auth.signUp({ email, password })
 
-    if (error) {
-      console.error(error)
+    if (signUpError) {
+      setServerError(signUpError.code!)
+      return
     }
 
-    router.push('/')
+    setTrue()
+    reset()
   }
 
-  return isUserActivityEnabled && (
+  return (
     <Page subtitle={ t('register.title') } noHeader noFooter>
       <Box sx={ { maxWidth: 400, mx: 'auto', px: 3, py: 4 } }>
         <Card>
           <Heading as="h1" sx={ { pb: 3 } }>{ t('register.title') }</Heading>
 
           <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(signUp) }>
+            { serverError && <Message>{ t(`error.${ serverError }`) }</Message> }
+
+            { isSuccess && <Message>{ t('register.success') }</Message> }
+
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
               <Input
                 placeholder={ t('register.email') }
@@ -82,7 +85,7 @@ export default function RegisterPage () {
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
               <Input
                 placeholder={ t('register.verify') }
-                type="verify"
+                type="password"
                 {
                   ...register('verify', {
                     required: true,
@@ -93,7 +96,11 @@ export default function RegisterPage () {
               { errors.verify && <Paragraph variant="small">{ t('register.error.verify') }</Paragraph> }
             </Flex>
 
-            <Button type="submit">{ t('register.cta') }</Button>
+            <Button type="submit" disabled={ isSubmitting }>{ t('register.cta') }</Button>
+
+            <div>
+              <TuiLink as={ Link } href={ LINKS.LOGIN }>{ t('register.login') }</TuiLink>
+            </div>
 
             <div>
               <BackCta/>
