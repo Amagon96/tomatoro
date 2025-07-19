@@ -47,14 +47,14 @@ export default function LoginPage () {
           <Heading as="h1" sx={ { pb: 3 } }>{ t('login.title') }</Heading>
 
           <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(logIn) }>
-            { serverError && <Message>{ t(`error.${ serverError }`) }</Message> }
+            { serverError && <Message>{ t(`login.error.${ serverError }`) }</Message> }
 
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
               <Input
                 placeholder={ t('login.email') }
                 { ...register('email', { required: true }) }
               />
-              { errors.email && <Paragraph variant="small">{ t('error.email') }</Paragraph> }
+              { errors.email && <Paragraph variant="small">{ t('login.error.email') }</Paragraph> }
             </Flex>
 
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
@@ -63,7 +63,7 @@ export default function LoginPage () {
                 type="password"
                 { ...register('password', { required: true }) }
               />
-              { errors.password && <Paragraph variant="small">{ t('error.password') }</Paragraph> }
+              { errors.password && <Paragraph variant="small">{ t('login.error.password') }</Paragraph> }
             </Flex>
 
             <Button type="submit" disabled={ isSubmitting }>{ t('login.cta') }</Button>

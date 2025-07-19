@@ -51,7 +51,7 @@ export default function RegisterPage () {
           <Heading as="h1" sx={ { pb: 3 } }>{ t('register.title') }</Heading>
 
           <Flex sx={ { gap: 3, flexShrink: 0, flexDirection: 'column' } } as="form" onSubmit={ handleSubmit(signUp) }>
-            { serverError && <Message>{ t(`error.${ serverError }`) }</Message> }
+            { serverError && <Message>{ t(`register.error.${ serverError }`) }</Message> }
 
             { isSuccess && <Message>{ t('register.success') }</Message> }
 
