@@ -1,16 +1,32 @@
 {
   "news": {
-    "title": "Actualizaciones"
+    "title": "Novedades"
   },
-  "login": {
-    "title": "Iniciar sesión",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "cta": "Iniciar sesión"
+  "welcome": {
+    "title": "Bienvenido a Tomatoro",
+    "description": "Esta es una aplicación de ejemplo para mostrar cómo funciona la internacionalización.",
+    "language": {
+      "title": "Elige tu idioma / Select Language",
+      "description": "El sitio se mostrará en el idioma seleccionado.",
+      "cta": "Continuar"
+    },
+    "profile": {
+      "title": "Tu perfil",
+      "description": "Vamos a crear tu perfil.",
+      "displayNameLabel": "¿Cómo te llamas?:",
+      "displayNamePlaceholder": "Escribe tu nombre",
+      "thumbnailLabel": "Elige una foto de perfil:",
+      "cta": "Continuar"
+    },
+    "final": {
+      "title": "¡Todo listo!",
+      "description": "Ya puedes empezar a usar Tomatoro. En breve te enviaremos al inicio. Si no, haz clic en el botón de abajo.",
+      "cta": "Ir al panel"
+    }
   },
   "dashboard": {
-    "title": "Panel de control",
-    "greeting": "Hola, {{name}}!"
+    "title": "Panel",
+    "greeting": "¡Hola, {{name}}!"
   },
   "blog": {
     "title": "Conoce nuestro blog"

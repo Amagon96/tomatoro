@@ -6,6 +6,7 @@
     "/blog": ["pages"],
     "/help": ["pages"],
     "/news": ["pages"],
+    "/welcome": ["pages"],
     "/auth/login": ["auth"],
     "/auth/register": ["auth"],
     "/auth/error": ["auth"],

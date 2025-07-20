@@ -52,7 +52,12 @@ export default function LoginPage () {
             <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
               <Input
                 placeholder={ t('login.email') }
-                { ...register('email', { required: true }) }
+                {
+                  ...register('email', {
+                    required: true,
+                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  })
+                }
               />
               { errors.email && <Paragraph variant="small">{ t('login.error.email') }</Paragraph> }
             </Flex>
