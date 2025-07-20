@@ -1,7 +1,4 @@
 {
-  "news": {
-    "title": "News"
-  },
   "welcome": {
     "title": "Welcome to Tomatoro",
     "description": "This is a sample application to demonstrate internationalization.",

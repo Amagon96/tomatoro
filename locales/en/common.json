@@ -42,7 +42,6 @@
         "title": "Site",
         "items": {
           "blog": "Blog",
-          "news": "News",
           "terms": "Terms of service",
           "privacy": "Privacy notice",
           "github": "Github"

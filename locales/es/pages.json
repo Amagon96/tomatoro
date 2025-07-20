@@ -1,7 +1,4 @@
 {
-  "news": {
-    "title": "Novedades"
-  },
   "welcome": {
     "title": "Bienvenido a Tomatoro",
     "description": "Esta es una aplicación de ejemplo para mostrar cómo funciona la internacionalización.",
