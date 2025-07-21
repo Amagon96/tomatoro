@@ -7,7 +7,7 @@ import { createSegment } from '~/utils/supabase/queries/segments.query'
 
 export const UserContext = React.createContext<{
   user?: User | null
-  reportSegment(type: SegmentType): void
+  reportSegment(type: SegmentType, duration?: number): void
 } | undefined>(undefined)
 
 export const useUserContext = () => {
@@ -35,8 +35,8 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
     })
   }, [supabase])
 
-  const reportSegment = useCallback(async (type: SegmentType) => {
-    await createSegment(context, type)
+  const reportSegment = useCallback(async (type: SegmentType, duration = 0) => {
+    await createSegment(context, type, duration)
   }, [context])
 
   const value = {

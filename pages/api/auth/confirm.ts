@@ -17,7 +17,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const tokenHash = stringOrFirstString(queryParams.token_hash)
   const type = stringOrFirstString(queryParams.type)
 
-  let next = '/error'
+  let next = '/auth/error'
 
   if (tokenHash && type) {
     const supabase = createClient(req, res)
@@ -25,10 +25,11 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       type: type as EmailOtpType,
       token_hash: tokenHash,
     })
+
     if (error) {
-      console.error(error)
+      next = `${ next }?reason=${ error.code || 'generic' }`
     } else {
-      next = stringOrFirstString(queryParams.next) || '/'
+      next = stringOrFirstString(queryParams.next) || '/welcome'
     }
   }
 

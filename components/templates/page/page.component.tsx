@@ -21,6 +21,8 @@ interface PageProps {
     imageUrl?: string
     caption?: string
   }
+  noHeader?: boolean
+  noFooter?: boolean
 }
 
 const defaultTitle = `${ SEO.title } | ${ SEO.subtitle }`
@@ -34,6 +36,8 @@ export const Page: FC<PageProps> = ({
   children,
   hero,
   isWrapped,
+  noFooter,
+  noHeader,
   seo,
   subtitle,
 }) => {
@@ -104,14 +108,14 @@ export const Page: FC<PageProps> = ({
       {/* Warning appears only in client. It might cause issues with SSR */ }
       { isClient && shouldShowUnstableWarning(origin) && (<UnstableWarning/>) }
 
-      <Header />
+      { noHeader || <Header/> }
 
       {/* Banners appears only in client. It might cause issues with SSR */ }
       { isClient && banners && <Banners banners={ banners }/> }
 
       { getContent({ children, isWrapped, hero }) }
 
-      <Footer version={ VERSION }/>
+      { noFooter || <Footer version={ VERSION }/> }
     </>
   )
 }

@@ -42,7 +42,6 @@
         "title": "Sitio",
         "items": {
           "blog": "Blog",
-          "news": "Actualizaciones",
           "terms": "Términos de uso",
           "privacy": "Aviso de privacidad",
           "github": "Github"

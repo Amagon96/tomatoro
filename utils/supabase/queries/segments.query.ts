@@ -10,7 +10,7 @@ interface SupabaseContext {
   user?: User | null
 }
 
-export async function createSegment (context: SupabaseContext, type: SegmentType) {
+export async function createSegment (context: SupabaseContext, type: SegmentType, duration: number = 0) {
   if (!context.user) {
     return
   }
@@ -18,6 +18,7 @@ export async function createSegment (context: SupabaseContext, type: SegmentType
   const { error } = await context.supabase.from('segments').insert({
     type,
     user_id: context.user.id,
+    duration,
   })
 
   if (error) {

@@ -39,11 +39,12 @@ export default function DashboardPage ({ monthlyReport, user }: {
   monthlyReport: WeeklyReport
 }) {
   const { t } = useTranslation('pages')
+  const name = user.user_metadata.displayName || user.email
 
   return (
     <Page subtitle={ t('dashboard.title') } isWrapped>
       <Grid variant="contained" sx={ { justifyItems: 'start' } }>
-        <Heading as="h1">{ t('dashboard.greeting', { name: user.email }) }</Heading>
+        <Heading as="h1">{ t('dashboard.greeting', { name }) }</Heading>
 
         <ActivityPage report={ monthlyReport }/>
 

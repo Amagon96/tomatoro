@@ -20,7 +20,7 @@ export const Header = () => {
   const { setFalse, setTrue, value } = useBoolean(false)
   const { user } = useUserContext()
   const posthog = usePostHog()
-  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity')
+  const isUserActivityEnabled = posthog.isFeatureEnabled('user-activity') || user
 
   // @ts-ignore
   const pagesForLocale = PAGES[locale]

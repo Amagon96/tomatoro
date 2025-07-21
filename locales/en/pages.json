@@ -1,12 +1,25 @@
 {
-  "news": {
-    "title": "News"
-  },
-  "login": {
-    "title": "Login",
-    "email": "Email",
-    "password": "Password",
-    "cta": "Login"
+  "welcome": {
+    "title": "Welcome to Tomatoro",
+    "description": "This is a sample application to demonstrate internationalization.",
+    "language": {
+      "title": "Select Language / Elige tu idioma",
+      "description": "The site will be displayed in the selected language.",
+      "cta": "Continue"
+    },
+    "profile": {
+      "title": "Your profile",
+      "description": "Let's create a profile for you.",
+      "displayNameLabel": "What's your name?:",
+      "displayNamePlaceholder": "Enter your name",
+      "thumbnailLabel": "Choose a profile picture:",
+      "cta": "Continue"
+    },
+    "final": {
+      "title": "All set!",
+      "description": "You can now start using the application. You'll be redirected in a moment. If not, click the button below.",
+      "cta": "Go to Dashboard"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

@@ -5,8 +5,10 @@
     "*": ["common", "feedback", "subscribe"],
     "/blog": ["pages"],
     "/help": ["pages"],
-    "/news": ["pages"],
-    "/login": ["pages"],
+    "/welcome": ["pages"],
+    "/auth/login": ["auth"],
+    "/auth/register": ["auth"],
+    "/auth/error": ["auth"],
     "/dashboard": ["pages", "activity"],
     "/": ["home", "timer"],
     "/about": ["about"]
