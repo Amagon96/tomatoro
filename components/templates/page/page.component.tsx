@@ -11,7 +11,7 @@ import { Footer } from '~/components/organisms/footer'
 import { Header } from '~/components/organisms/header'
 import { SEO, VERSION } from '~/utils/config'
 
-interface PageProps {
+export interface PageProps {
   banners?: Banner[]
   children: React.ReactNode
   subtitle?: string

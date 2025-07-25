@@ -84,3 +84,10 @@ export const LINKS = {
 }
 
 export const CMS_URL = 'https://cms.tomatoro.com/api'
+
+export const PROFILE_THUMBNAILS = [
+  { id: 1, url: 'https://placehold.co/100/DA3B1B/FFF' },
+  { id: 2, url: 'https://placehold.co/100/EAB440/000' },
+  { id: 3, url: 'https://placehold.co/100/647C46/FFF' },
+  { id: 4, url: 'https://placehold.co/100/FFF/666' },
+]

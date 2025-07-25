@@ -2,11 +2,10 @@ import type { User } from '@supabase/supabase-js'
 import type { GetServerSidePropsContext } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import React from 'react'
-import { Grid, Heading } from 'theme-ui'
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { ActivityPage } from '~/components/organisms/activity'
-import { Page } from '~/components/templates/page'
+import { DashboardPage } from '~/components/templates/dashboard-page'
 import { retrieveMonthlyReport, WeeklyReport } from '~/utils/supabase/queries/segments.query'
 import { createClient } from '~/utils/supabase/server-props'
 
@@ -34,22 +33,17 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
   }
 }
 
-export default function DashboardPage ({ monthlyReport, user }: {
+export default function DashboardIndexPage ({ monthlyReport, user }: {
   user: User,
   monthlyReport: WeeklyReport
 }) {
   const { t } = useTranslation('pages')
-  const name = user.user_metadata.displayName || user.email
 
   return (
-    <Page subtitle={ t('dashboard.title') } isWrapped>
-      <Grid variant="contained" sx={ { justifyItems: 'start' } }>
-        <Heading as="h1">{ t('dashboard.greeting', { name }) }</Heading>
+    <DashboardPage subtitle={ t('dashboard.title') }>
+      <ActivityPage report={ monthlyReport }/>
 
-        <ActivityPage report={ monthlyReport }/>
-
-        <BackCta/>
-      </Grid>
-    </Page>
+      <BackCta/>
+    </DashboardPage>
   )
 }

@@ -21,9 +21,11 @@ export function ActivityPage ({ report }: Props) {
   }
 
   return (
-    <Box sx={ { maxWidth: 900, mx: 'auto', px: 3, py: 4 } }>
-      <Heading as="h1" sx={ { fontSize: 4, mb: 1 } }>{ t('title') }</Heading>
-      <Text sx={ { mb: 4 } }>{ t('subtitle') }</Text>
+    <Box sx={ { maxWidth: 900, mx: 'auto', px: 3, pb: 4 } }>
+      <Box sx={ { mb: 4, textAlign: 'center' } }>
+        <Heading as="h1" sx={ { fontSize: 4, mb: 1 } }>{ t('title') }</Heading>
+        <Text sx={ { mb: 4 } }>{ t('subtitle') }</Text>
+      </Box>
 
       <Box
         sx={ {
@@ -33,11 +35,11 @@ export function ActivityPage ({ report }: Props) {
           p: 3,
         } }
       >
-        {report.length > 0 && (
-          <Heading as="h2" sx={{ fontSize: 3, mb: 3 }}>
-            {format(parseISO(report[0].day), 'LLLL, yyyy')}
+        { report.length > 0 && (
+          <Heading as="h2" sx={ { fontSize: 3, mb: 3 } }>
+            { format(parseISO(report[0].day), 'LLLL, yyyy') }
           </Heading>
-        )}
+        ) }
 
         <Grid columns={ [5, 7] } gap={ 3 } sx={ { mb: 4 } }>
           { sorted.map(({ day, segments }) => {
