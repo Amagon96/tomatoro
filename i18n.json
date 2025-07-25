@@ -10,6 +10,9 @@
     "/auth/register": ["auth"],
     "/auth/error": ["auth"],
     "/dashboard": ["pages", "activity"],
+    "/dashboard/activity": ["dashboard"],
+    "/dashboard/settings": ["dashboard"],
+    "/dashboard/profile": ["dashboard"],
     "/": ["home", "timer"],
     "/about": ["about"]
   }
