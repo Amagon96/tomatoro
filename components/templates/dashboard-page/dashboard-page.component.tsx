@@ -39,6 +39,7 @@ export const DashboardPage: FC<PropsWithChildren<DashboardPageProps>> = ({
 
   const userMeta = user.user_metadata || {}
   const name = userMeta.displayName || user.email
+  const thumbnail = PROFILE_THUMBNAILS.find((pt) => pt.id === Number(userMeta.thumbnail)) || PROFILE_THUMBNAILS[0]
 
   return (
     <Page subtitle={ subtitle }>
@@ -64,8 +65,8 @@ export const DashboardPage: FC<PropsWithChildren<DashboardPageProps>> = ({
             textDecoration: 'none',
           } }
         >
-          <Text>{ name }</Text>
-          <Avatar src={ PROFILE_THUMBNAILS[0].url } sx={ { backgroundColor: 'white' } }/>
+          <Text variant="nav">{ name }</Text>
+          <Avatar src={ thumbnail.src } sx={ { backgroundColor: 'white' } }/>
         </Flex>
       </Flex>
       <Grid variant="contained" sx={ { justifyItems: 'start', pb: 5 } }>

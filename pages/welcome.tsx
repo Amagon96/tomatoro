@@ -2,12 +2,12 @@ import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Box, Card, Flex, Heading, Paragraph, Button, Progress, Input, Label, Spinner } from 'theme-ui'
+import { Box, Card, Flex, Heading, Paragraph, Button, Progress, Input, Label, Spinner, Avatar } from 'theme-ui'
 import { useTimeout } from 'usehooks-ts'
 
 import { LanguageSelector } from '~/components/molecules/language-selector'
 import { Page } from '~/components/templates/page'
-import { LINKS } from '~/utils/config'
+import { LINKS, PROFILE_THUMBNAILS } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
 
 const STEPS = [
@@ -75,28 +75,21 @@ function LanguageStep ({ goToNextStep }: WelcomeStepProps) {
 
 type ProfileInputs = {
   displayName: string
-  thumbnail: string
+  thumbnail: number
 }
-
-const THUMBNAILS = [
-  { id: '1', src: 'https://placehold.co/40' },
-  { id: '2', src: 'https://placehold.co/40' },
-  { id: '3', src: 'https://placehold.co/40' },
-  { id: '4', src: 'https://placehold.co/40' },
-]
 
 function ProfileStep ({ goToNextStep }: WelcomeStepProps) {
   const { t } = useTranslation('pages')
   const supabase = createClient()
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, ...rest },
     handleSubmit,
     register,
   } = useForm<ProfileInputs>({
     mode: 'onBlur',
     defaultValues: {
       displayName: '',
-      thumbnail: THUMBNAILS[0].id,
+      thumbnail: PROFILE_THUMBNAILS[0].id,
     },
   })
 
@@ -153,10 +146,10 @@ function ProfileStep ({ goToNextStep }: WelcomeStepProps) {
         } }>
           <Label>{ t('welcome.profile.thumbnailLabel') }</Label>
           {
-            THUMBNAILS.map(({ id, src }) => (
+            PROFILE_THUMBNAILS.map(({ id, src }) => (
               <label key={ id }>
-                <input type="radio" value={ id } { ...register('thumbnail') }/>
-                <img src={ src } alt={ `Avatar number ${ id }` }/>
+                <input type="radio" value={ id } { ...register('thumbnail') } />
+                <Avatar src={ src }/>
               </label>
             ))
           }
