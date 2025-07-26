@@ -40,7 +40,7 @@ export function ProfileStepPage ({ goToNextStep }: WelcomeStepProps) {
           display_name: displayName,
           thumbnail,
         })
-        .eq('user_id', user!.id)
+        .eq('user_id', user!.id) // TODO fix this !
         .select()
 
       error = response.error
@@ -62,7 +62,7 @@ export function ProfileStepPage ({ goToNextStep }: WelcomeStepProps) {
       return
     }
 
-    await refreshProfile()
+    await refreshProfile(user!.id) // TODO fix this !
     goToNextStep()
   }
 

@@ -7,6 +7,7 @@ import { Box, Button, Card, Flex, Heading, Input, Link as TuiLink, Message, Para
 
 import { BackCta } from '~/components/atoms/back-cta'
 import { Page } from '~/components/templates/page'
+import { useUserContext } from '~/contexts/user'
 import { LINKS } from '~/utils/config'
 import { createClient } from '~/utils/supabase/component'
 
@@ -20,6 +21,7 @@ export default function LoginPage () {
   const supabase = createClient()
   const { t } = useTranslation('auth')
   const [serverError, setServerError] = React.useState<string | null>(null)
+  const { refreshUser } = useUserContext()
 
   const {
     formState: { errors, isSubmitting },
@@ -33,6 +35,7 @@ export default function LoginPage () {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (!error) {
+      await refreshUser()
       await router.push('/dashboard')
       return
     }

@@ -1,3 +1,4 @@
+import type { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import React, { useMemo, useState } from 'react'
@@ -6,6 +7,28 @@ import { Box, Card, Flex, Progress } from 'theme-ui'
 import { Page } from '~/components/templates/page'
 import { FinalStepPage, LanguageStepPage, ProfileStepPage } from '~/components/templates/welcome'
 import { LINKS } from '~/utils/config'
+import { createClient } from '~/utils/supabase/server-props'
+
+export async function getServerSideProps (context: GetServerSidePropsContext) {
+  const supabase = createClient(context)
+
+  const { data, error } = await supabase.auth.getUser()
+
+  if (error || !data) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      user: data.user,
+    },
+  }
+}
 
 const STEPS = [
   LanguageStepPage,

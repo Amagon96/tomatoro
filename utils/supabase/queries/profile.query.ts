@@ -2,29 +2,26 @@ import { SupabaseClient, User } from '@supabase/supabase-js'
 
 import { Profile } from '~/@types/types.db'
 
-interface RetrieveProfileResult {
-  user: User,
-  profile: Profile | null
-}
+export async function retrieveUser (supabase: SupabaseClient): Promise<User | null> {
+  const { data, error } = await supabase.auth.getUser()
 
-export async function retrieveProfile (supabase: SupabaseClient): Promise<RetrieveProfileResult> {
-  const { data: userData, error: userError } = await supabase.auth.getUser()
-
-  if (userError || !userData.user) {
-    throw userError || new Error('User not found')
+  if (error || !data.user) {
+    console.info('[INFO] User not found')
+    return null
   }
 
+  return data.user
+}
+
+export async function retrieveProfile (supabase: SupabaseClient, userId: string): Promise<Profile | null> {
   const { data: profileData, error: profileError } = await supabase
     .from('profiles')
     .select()
-    .eq('user_id', userData.user.id)
+    .eq('user_id', userId)
 
   if (profileError) {
     throw profileError
   }
 
-  return {
-    user: userData.user,
-    profile: profileData.length > 0 ? profileData[0] : null,
-  } satisfies RetrieveProfileResult
+  return profileData.length > 0 ? profileData[0] : null
 }
