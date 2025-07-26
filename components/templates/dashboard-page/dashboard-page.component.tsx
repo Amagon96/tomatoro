@@ -1,7 +1,5 @@
-// @ts-nocheck
-// TODO: Fix typescript errors in this file
 import Link from 'next/link'
-import React, { FC, PropsWithChildren } from 'react'
+import React, { FC, PropsWithChildren, useMemo } from 'react'
 import { Avatar, Flex, Grid, Text, NavLink } from 'theme-ui'
 
 import { Page, PageProps } from '~/components/templates/page'
@@ -31,15 +29,16 @@ export const DashboardPage: FC<PropsWithChildren<DashboardPageProps>> = ({
   children,
   subtitle,
 }) => {
-  const { user } = useUserContext()
+  const { profile, user } = useUserContext()
 
-  if (!user) {
+  const derivedState = useMemo(() => user ? {
+    name: profile?.display_name || user.email,
+    thumbnail: PROFILE_THUMBNAILS.find((pt) => pt.id === Number(profile?.thumbnail)) || PROFILE_THUMBNAILS[0],
+  } : null, [profile, user])
+
+  if (!derivedState) {
     return null
   }
-
-  const userMeta = user.user_metadata || {}
-  const name = userMeta.displayName || user.email
-  const thumbnail = PROFILE_THUMBNAILS.find((pt) => pt.id === Number(userMeta.thumbnail)) || PROFILE_THUMBNAILS[0]
 
   return (
     <Page subtitle={ subtitle }>
@@ -55,18 +54,10 @@ export const DashboardPage: FC<PropsWithChildren<DashboardPageProps>> = ({
             ))
           }
         </Flex>
-        <Flex
-          as={ Link }
-          href="/dashboard/profile"
-          sx={ {
-            alignItems: 'center',
-            gap: 3,
-            color: 'inherit',
-            textDecoration: 'none',
-          } }
-        >
-          <Text variant="nav">{ name }</Text>
-          <Avatar src={ thumbnail.src } sx={ { backgroundColor: 'white' } }/>
+        {/* @ts-ignore */ }
+        <Flex as={ Link } href="/dashboard/profile" sx={ { alignItems: 'center', gap: 3, textDecoration: 'none' } }>
+          <Text variant="nav">{ derivedState.name }</Text>
+          <Avatar src={ derivedState.thumbnail.src } sx={ { backgroundColor: 'white' } }/>
         </Flex>
       </Flex>
       <Grid variant="contained" sx={ { justifyItems: 'start', pb: 5 } }>
