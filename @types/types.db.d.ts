@@ -1,7 +1,6 @@
 import { SegmentType } from '~/utils/config'
 
 type BaseSupabaseModel = {
-  id: string
   created_at: string
 }
 

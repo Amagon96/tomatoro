@@ -23,7 +23,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
     }
   }
 
-  const monthlyReport = await retrieveMonthlyReport({ supabase, user: data.user })
+  const monthlyReport = await retrieveMonthlyReport(supabase)
 
   return {
     props: {

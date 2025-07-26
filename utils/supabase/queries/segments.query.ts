@@ -1,25 +1,24 @@
-import { SupabaseClient, User } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { eachDayOfInterval, endOfMonth, format, isSameDay, parseISO, startOfMonth } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 
 import { Segment } from '~/@types/types.db'
 import { SegmentType } from '~/utils/config'
 
-interface SupabaseContext {
-  supabase: SupabaseClient
-  user?: User | null
-}
+export async function createSegment (supabase: SupabaseClient, type: SegmentType, duration: number = 0) {
+  const { data: userData, error: userError } = await supabase.auth.getUser()
 
-export async function createSegment (context: SupabaseContext, type: SegmentType, duration: number = 0) {
-  if (!context.user) {
-    return
+  if (userError || !userData.user) {
+    throw userError || new Error('User not found')
   }
 
-  const { error } = await context.supabase.from('segments').insert({
-    type,
-    user_id: context.user.id,
-    duration,
-  })
+  const { error } = await supabase
+    .from('segments')
+    .insert({
+      type,
+      user_id: userData.user.id,
+      duration,
+    })
 
   if (error) {
     throw error
@@ -32,22 +31,24 @@ export type WeeklyReport = Array<{
 }>
 
 export async function retrieveMonthlyReport (
-  context: SupabaseContext,
+  supabase: SupabaseClient,
   year = new Date().getFullYear(),
   month = new Date().getMonth(), // zero-indexed (0 = January)
   timezone = Intl.DateTimeFormat().resolvedOptions().timeZone // e.g., 'America/Mexico_City'
 ) {
-  if (!context.user) {
-    return
+  const { data: userData, error: userError } = await supabase.auth.getUser()
+
+  if (userError || !userData.user) {
+    throw userError || new Error('User not found')
   }
 
   const from = startOfMonth(new Date(year, month))
   const to = endOfMonth(from)
 
-  const { data, error } = await context.supabase
+  const { data, error } = await supabase
     .from('segments')
     .select('*')
-    .eq('user_id', context.user.id)
+    .eq('user_id', userData.user.id)
     .gte('created_at', from.toISOString())
     .lte('created_at', to.toISOString())
 

@@ -32,11 +32,10 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
   const supabase = createClient()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const context = useMemo(() => ({ supabase, user }), [supabase, user])
 
   const reportSegment = useCallback(async (type: SegmentType, duration = 0) => {
-    await createSegment(context, type, duration)
-  }, [context])
+    await createSegment(supabase, type, duration)
+  }, [supabase])
 
   const refreshProfile = useCallback(async () => {
     const { profile, user } = await retrieveProfile(supabase)
