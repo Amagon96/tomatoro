@@ -11,6 +11,7 @@ export const UserContext = React.createContext<{
   user: User | null
   profile: Profile | null
   reportSegment(type: SegmentType, duration?: number): void
+  refreshProfile(): Promise<void>
 } | undefined>(undefined)
 
 export const useUserContext = () => {
@@ -33,23 +34,27 @@ export const UsersProvider: React.FC<{ children: React.ReactNode }> = ({
   const [profile, setProfile] = useState<Profile | null>(null)
   const context = useMemo(() => ({ supabase, user }), [supabase, user])
 
-  useEffect(() => {
-    retrieveProfile(supabase).then(({ profile, user }) => {
-      setUser(user)
-      setProfile(profile)
-    })
-  }, [supabase])
-
   const reportSegment = useCallback(async (type: SegmentType, duration = 0) => {
     await createSegment(context, type, duration)
   }, [context])
+
+  const refreshProfile = useCallback(async () => {
+    const { profile, user } = await retrieveProfile(supabase)
+    setUser(user)
+    setProfile(profile)
+  }, [supabase])
+
+  useEffect(() => {
+    refreshProfile().then()
+  }, [refreshProfile])
 
   const value = useMemo(() => ({
     user,
     profile,
     reportSegment,
+    refreshProfile,
   }
-  ), [profile, reportSegment, user])
+  ), [profile, refreshProfile, reportSegment, user])
 
   return (
     <UserContext.Provider value={ value }>

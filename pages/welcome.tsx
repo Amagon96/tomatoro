@@ -1,24 +1,20 @@
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { Box, Card, Flex, Heading, Paragraph, Button, Progress, Input, Label, Spinner, Avatar } from 'theme-ui'
-import { useTimeout } from 'usehooks-ts'
+import React, { useMemo, useState } from 'react'
+import { Box, Card, Flex, Progress } from 'theme-ui'
 
-import { LanguageSelector } from '~/components/molecules/language-selector'
 import { Page } from '~/components/templates/page'
-import { LINKS, PROFILE_THUMBNAILS } from '~/utils/config'
-import { createClient } from '~/utils/supabase/component'
+import { FinalStepPage, LanguageStepPage, ProfileStepPage } from '~/components/templates/welcome'
+import { LINKS } from '~/utils/config'
 
 const STEPS = [
-  LanguageStep,
-  ProfileStep,
-  FinalStep,
+  LanguageStepPage,
+  ProfileStepPage,
+  FinalStepPage,
 ]
 
 export default function CallbackPage () {
   const router = useRouter()
-  const supabase = createClient()
   const { t } = useTranslation('pages')
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const CurrentStep = useMemo(() => STEPS[currentStepIndex], [currentStepIndex])
@@ -31,17 +27,6 @@ export default function CallbackPage () {
     }
   }
 
-  useEffect(() => {
-    async function checkUser () {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        await router.push(LINKS.LOGIN)
-      }
-    }
-
-    checkUser().then()
-  })
-
   return (
     <Page subtitle={ t('welcome.title') } noHeader noFooter>
       <Box sx={ { maxWidth: 400, mx: 'auto', px: 3, py: 4 } }>
@@ -53,124 +38,5 @@ export default function CallbackPage () {
         </Card>
       </Box>
     </Page>
-  )
-}
-
-interface WelcomeStepProps {
-  goToNextStep: () => void
-}
-
-function LanguageStep ({ goToNextStep }: WelcomeStepProps) {
-  const { t } = useTranslation('pages')
-
-  return (
-    <>
-      <Heading as="h1">{ t('welcome.language.title') }</Heading>
-      <Paragraph>{ t('welcome.language.description') }</Paragraph>
-      <LanguageSelector/>
-      <Button onClick={ goToNextStep }>{ t('welcome.language.cta') }</Button>
-    </>
-  )
-}
-
-type ProfileInputs = {
-  displayName: string
-  thumbnail: number
-}
-
-function ProfileStep ({ goToNextStep }: WelcomeStepProps) {
-  const { t } = useTranslation('pages')
-  const supabase = createClient()
-  const {
-    formState: { isSubmitting, ...rest },
-    handleSubmit,
-    register,
-  } = useForm<ProfileInputs>({
-    mode: 'onBlur',
-    defaultValues: {
-      displayName: '',
-      thumbnail: PROFILE_THUMBNAILS[0].id,
-    },
-  })
-
-  async function updateProfile ({ displayName, thumbnail }: ProfileInputs) {
-    await supabase.auth.updateUser({
-      data: {
-        displayName,
-        thumbnail,
-      },
-    }).then(({ error }) => {
-      if (error) {
-        console.error('Error updating profile:', error)
-        return
-      }
-      goToNextStep()
-    })
-  }
-
-  return (
-    <>
-      <Heading as="h1">{ t('welcome.profile.title') }</Heading>
-      <Paragraph>{ t('welcome.profile.description') }</Paragraph>
-      <Flex
-        as="form"
-        onSubmit={ handleSubmit(updateProfile) }
-        sx={ {
-          gap: 3,
-          flexShrink: 0,
-          flexDirection: 'column',
-          width: '100%',
-          maxWidth: 400,
-        } }
-      >
-        <Flex sx={ { flexDirection: 'column', gap: 2, width: '100%' } }>
-          <Label>{ t('welcome.profile.displayNameLabel') }</Label>
-          <Input
-            placeholder={ t('welcome.profile.displayNamePlaceholder') }
-            { ...register('displayName') }
-          />
-        </Flex>
-        <Flex sx={ {
-          gap: 2,
-          flexWrap: 'wrap',
-          '& input': {
-            display: 'none',
-          },
-          '& img': {
-            border: '3px solid',
-            borderColor: 'transparent',
-          },
-          '& input:checked ~ img': {
-            borderColor: 'primary',
-          },
-        } }>
-          <Label>{ t('welcome.profile.thumbnailLabel') }</Label>
-          {
-            PROFILE_THUMBNAILS.map(({ id, src }) => (
-              <label key={ id }>
-                <input type="radio" value={ id } { ...register('thumbnail') } />
-                <Avatar src={ src }/>
-              </label>
-            ))
-          }
-        </Flex>
-        <Button type='submit' disabled={ isSubmitting }>{ t('welcome.profile.cta') }</Button>
-      </Flex>
-    </>
-  )
-}
-
-function FinalStep ({ goToNextStep }: WelcomeStepProps) {
-  const { t } = useTranslation('pages')
-
-  useTimeout(() => goToNextStep(), 4000)
-
-  return (
-    <>
-      <Heading as="h1">{ t('welcome.final.title') }</Heading>
-      <Paragraph>{ t('welcome.final.description') }</Paragraph>
-      <Spinner/>
-      <Button onClick={ goToNextStep }>{ t('welcome.final.cta') }</Button>
-    </>
   )
 }
