@@ -7,14 +7,14 @@ import { Box, Card, Flex, Progress } from 'theme-ui'
 import { Page } from '~/components/templates/page'
 import { FinalStepPage, LanguageStepPage, ProfileStepPage } from '~/components/templates/welcome'
 import { LINKS } from '~/utils/config'
+import { retrieveUser } from '~/utils/supabase/queries/profile.query'
 import { createClient } from '~/utils/supabase/server-props'
 
 export async function getServerSideProps (context: GetServerSidePropsContext) {
   const supabase = createClient(context)
+  const user = await retrieveUser(supabase)
 
-  const { data, error } = await supabase.auth.getUser()
-
-  if (error || !data) {
+  if (!user) {
     return {
       redirect: {
         destination: '/',
@@ -25,7 +25,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
 
   return {
     props: {
-      user: data.user,
+      user,
     },
   }
 }
@@ -36,7 +36,7 @@ const STEPS = [
   FinalStepPage,
 ]
 
-export default function CallbackPage () {
+export default function WelcomePage () {
   const router = useRouter()
   const { t } = useTranslation('pages')
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
