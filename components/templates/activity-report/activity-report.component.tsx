@@ -1,0 +1,19 @@
+import { Segment } from '~/@types/types.db'
+
+interface Props {
+  report: Array<{
+    day: string,
+    segments: Array<Segment>
+  }>
+}
+
+export const ActivityReport = ({ report }: Props) => {
+  console.log('[DEBUG] REPORT', report)
+
+  return (
+    <div>
+      <h1>Activity Report</h1>
+      <p>This is the activity report component.</p>
+    </div>
+  )
+}

@@ -45,17 +45,28 @@ export default function App ({ Component, pageProps }: AppProps) {
   }))
 
   useEffect(() => {
-    const query = router.query
-    const { slug, ...currentQuery } = query
+    const { date, slug, ...currentQuery } = router.query
 
+    // if there's nothing else to clear out, bail
     if (Object.keys(currentQuery).length === 0) {
       return
     }
 
-    const url = slug ? { query: { slug } } : {}
+    // build a new query object only with slug/date
+    const newQuery: Record<string, string | string[]> = {}
+    if (slug) {
+      newQuery.slug = slug
+    }
+    if (date) {
+      newQuery.date = date
+    }
 
     if (router.isReady) {
-      router.push(url, undefined, { shallow: true }).then()
+      router.push(
+        { query: newQuery },
+        undefined,
+        { shallow: true }
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
