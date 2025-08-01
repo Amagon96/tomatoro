@@ -6,7 +6,7 @@ import React from 'react'
 import { BackCta } from '~/components/atoms/back-cta'
 import { ActivityPage } from '~/components/organisms/activity'
 import { DashboardPage } from '~/components/templates/dashboard-page'
-import { retrieveMonthlyReport, WeeklyReport } from '~/utils/supabase/queries/segments.query'
+import { retrieveMonthlyReport, SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 import { createClient } from '~/utils/supabase/server-props'
 
 export async function getServerSideProps (context: GetServerSidePropsContext) {
@@ -35,7 +35,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
 
 export default function DashboardIndexPage ({ monthlyReport, user }: {
   user: User,
-  monthlyReport: WeeklyReport
+  monthlyReport: SegmentReportBasedOnDays
 }) {
   const { t } = useTranslation('pages')
 

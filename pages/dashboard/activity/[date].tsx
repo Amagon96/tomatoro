@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker'
 import { ActivityReport } from '~/components/templates/activity-report'
 import { DashboardPage } from '~/components/templates/dashboard-page'
 import { retrieveUser } from '~/utils/supabase/queries/profile.query'
-import { retrieveMonthlyReport, WeeklyReport } from '~/utils/supabase/queries/segments.query'
+import { retrieveWeeklyReport, SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 import { createClient } from '~/utils/supabase/server-props'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -16,11 +16,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 interface Props {
   date: string,
   user: User,
-  monthlyReport: WeeklyReport
+  weeklyReport: SegmentReportBasedOnDays
 }
 
 export const getServerSideProps: GetServerSideProps<
-  { user: User; monthlyReport: { day: string; segments: any[] }[] },
+  { user: User; weeklyReport: { day: string; segments: any[] }[] },
   { date: string }
 > = async (context: GetServerSidePropsContext<{ date: string }>) => {
   const supabase = createClient(context)
@@ -38,19 +38,17 @@ export const getServerSideProps: GetServerSideProps<
   const date = context.params?.date || new Date().toISOString()
   const parsed = new Date(date)
 
-  // 5. Fetch the report
-  const monthlyReport = await retrieveMonthlyReport(
+  const weeklyReport = await retrieveWeeklyReport(
     supabase,
-    parsed.getFullYear(),
-    parsed.getMonth(),
+    parsed,
   )
 
   return {
-    props: { date, user, monthlyReport },
+    props: { date, user, weeklyReport },
   }
 }
 
-export default function DashboardActivityPage ({ date, monthlyReport }: Props) {
+export default function DashboardActivityPage ({ date, weeklyReport }: Props) {
   const { t } = useTranslation('dashboard')
 
   const updateDate = useCallback(async (date: Date | null) => {
@@ -65,10 +63,10 @@ export default function DashboardActivityPage ({ date, monthlyReport }: Props) {
         todayButton="Today"
         onChange={ updateDate }
         dateFormat="MM/yyyy"
-        showMonthYearPicker
+        showWeekPicker
       />
 
-      <ActivityReport report={ monthlyReport }/>
+      <ActivityReport report={ weeklyReport }/>
     </DashboardPage>
   )
 }

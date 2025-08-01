@@ -4,10 +4,10 @@ import { Box, Flex, Grid, Text, Heading } from 'theme-ui'
 
 import { Tomato } from '~/components/atoms/tomato'
 import { SegmentType } from '~/utils/config'
-import { WeeklyReport } from '~/utils/supabase/queries/segments.query'
+import { SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 
 type Props = {
-  report: WeeklyReport
+  report: SegmentReportBasedOnDays
 }
 
 export function ActivityPage ({ report }: Props) {
