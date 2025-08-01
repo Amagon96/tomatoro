@@ -1,353 +1,246 @@
-import React from 'react'
-import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { parseISO } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
+import React, { useMemo } from 'react'
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  ZAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 
-const data01 = [
-  { hour: '12a', index: 1, value: 170 },
-  { hour: '1a', index: 1, value: 180 },
-  { hour: '2a', index: 1, value: 150 },
-  { hour: '3a', index: 1, value: 120 },
-  { hour: '4a', index: 1, value: 200 },
-  { hour: '5a', index: 1, value: 300 },
-  { hour: '6a', index: 1, value: 400 },
-  { hour: '7a', index: 1, value: 200 },
-  { hour: '8a', index: 1, value: 100 },
-  { hour: '9a', index: 1, value: 150 },
-  { hour: '10a', index: 1, value: 160 },
-  { hour: '11a', index: 1, value: 170 },
-  { hour: '12a', index: 1, value: 180 },
-  { hour: '1p', index: 1, value: 144 },
-  { hour: '2p', index: 1, value: 166 },
-  { hour: '3p', index: 1, value: 145 },
-  { hour: '4p', index: 1, value: 150 },
-  { hour: '5p', index: 1, value: 170 },
-  { hour: '6p', index: 1, value: 180 },
-  { hour: '7p', index: 1, value: 165 },
-  { hour: '8p', index: 1, value: 130 },
-  { hour: '9p', index: 1, value: 140 },
-  { hour: '10p', index: 1, value: 170 },
-  { hour: '11p', index: 1, value: 180 },
+import type { Segment } from '~/@types/types.db'
+import { SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
+
+type HourlyPoint = {
+  hour: string
+  index: number
+  value: number
+}
+
+const WEEKDAY_ORDER = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
 ]
 
-const data02 = [
-  { hour: '12a', index: 1, value: 160 },
-  { hour: '1a', index: 1, value: 180 },
-  { hour: '2a', index: 1, value: 150 },
-  { hour: '3a', index: 1, value: 120 },
-  { hour: '4a', index: 1, value: 200 },
-  { hour: '5a', index: 1, value: 300 },
-  { hour: '6a', index: 1, value: 100 },
-  { hour: '7a', index: 1, value: 200 },
-  { hour: '8a', index: 1, value: 100 },
-  { hour: '9a', index: 1, value: 150 },
-  { hour: '10a', index: 1, value: 160 },
-  { hour: '11a', index: 1, value: 160 },
-  { hour: '12a', index: 1, value: 180 },
-  { hour: '1p', index: 1, value: 144 },
-  { hour: '2p', index: 1, value: 166 },
-  { hour: '3p', index: 1, value: 145 },
-  { hour: '4p', index: 1, value: 150 },
-  { hour: '5p', index: 1, value: 160 },
-  { hour: '6p', index: 1, value: 180 },
-  { hour: '7p', index: 1, value: 165 },
-  { hour: '8p', index: 1, value: 130 },
-  { hour: '9p', index: 1, value: 140 },
-  { hour: '10p', index: 1, value: 160 },
-  { hour: '11p', index: 1, value: 180 },
-]
+const DEFAULT_START_HOUR = 9
+const DEFAULT_END_HOUR = 17 // 5pm
 
-const parseDomain = () => [
-  0,
-  Math.max(
-    Math.max.apply(
-      null,
-      data01.map((entry) => entry.value),
-    ),
-    Math.max.apply(
-      null,
-      data02.map((entry) => entry.value),
-    ),
-  ),
-]
+const formatHourLabel = (hour: number) => {
+  if (hour === 0) {
+    return '12am'
+  }
+  if (hour < 12) {
+    return `${ hour }am`
+  }
+  if (hour === 12) {
+    return '12pm'
+  }
+  return `${ hour - 12 }pm`
+}
 
-export const BubbleChart = () => {
-  const domain = parseDomain()
-  const range = [16, 225]
+const initEmptyDay = (): HourlyPoint[] =>
+  Array.from({ length: 24 }, (_, h) => ({
+    hour: formatHourLabel(h),
+    index: 1,
+    value: 0,
+  }))
+
+const buildHourlyData = (
+  weeklyReport: SegmentReportBasedOnDays,
+  timezone: string
+): Record<string, HourlyPoint[]> => {
+  const byDay: Record<string, HourlyPoint[]> = {}
+  WEEKDAY_ORDER.forEach((d) => {
+    byDay[d] = initEmptyDay()
+  })
+
+  for (const dayEntry of weeklyReport) {
+    const localDay = parseISO(dayEntry.day)
+    const dayName = WEEKDAY_ORDER[localDay.getDay()]
+
+    for (const seg of dayEntry.segments as Segment[]) {
+      const createdAt = (seg as any).created_at
+      if (!createdAt) {
+        continue
+      }
+      const utc = parseISO(createdAt)
+      const zoned = toZonedTime(utc, timezone)
+
+      // Verifica que esté en el mismo día local
+      if (zoned.getDate() !== localDay.getDate()) {
+        continue
+      }
+
+      const hour = zoned.getHours()
+      const duration = typeof (seg as any).duration === 'number' ? (seg as any).duration : 1
+      byDay[dayName][hour].value += duration
+    }
+  }
+
+  return byDay
+}
+
+const computeGlobalHourBounds = (byDay: Record<string, HourlyPoint[]>) => {
+  let minHour = 24
+  let maxHour = -1
+  Object.values(byDay).forEach((dayArray) => {
+    dayArray.forEach((point, hour) => {
+      if (point.value > 0) {
+        if (hour < minHour) {
+          minHour = hour
+        }
+        if (hour > maxHour) {
+          maxHour = hour
+        }
+      }
+    })
+  })
+
+  // Si no hay datos o solo una hora activa, usa el rango por defecto
+  if (maxHour === -1 || maxHour - minHour < 1) {
+    return [DEFAULT_START_HOUR, DEFAULT_END_HOUR] as const
+  }
+
+  return [minHour, maxHour] as const
+}
+
+const sliceByGlobalBounds = (data: HourlyPoint[], bounds: readonly [number, number]) => {
+  const [minHour, maxHour] = bounds
+  return data.slice(minHour, maxHour + 1)
+}
+
+const computeDomain = (datasets: HourlyPoint[][]): [number, number] => {
+  const allValues = datasets.flat().map((d) => d.value)
+  const max = Math.max(...allValues, 0)
+  return [0, max || 1]
+}
+
+type CustomTooltipProps = {
+  active?: boolean
+  payload?: Array<{ payload: HourlyPoint }>
+}
+
+const makeTooltip =
+  (dayName: string) => {
+    const TooltipComponent: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+      if (active && payload && payload.length) {
+        const data = payload[0].payload
+        return (
+          <div
+            style={ {
+              backgroundColor: '#fff',
+              border: '1px solid #999',
+              margin: 0,
+              padding: 10,
+            } }
+          >
+            <p style={ { margin: 0, fontWeight: '600' } }>{ dayName }</p>
+            <p style={ { margin: 0 } }>{ data.hour }</p>
+            <p style={ { margin: 0 } }>
+              <span>value: </span>
+              { data.value }
+            </p>
+          </div>
+        )
+      }
+      return null
+    }
+
+    TooltipComponent.displayName = `BubbleTooltip(${ dayName })`
+    return TooltipComponent
+  }
+
+interface Props {
+  weeklyReport?: SegmentReportBasedOnDays
+  timezone?: string
+}
+
+export const BubbleChart: React.FC<Props> = ({
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+  weeklyReport,
+}) => {
+  const chartDataByDay = useMemo(() => {
+    if (weeklyReport && weeklyReport.length) {
+      return buildHourlyData(weeklyReport, timezone)
+    }
+
+    // fallback vacío: todas las horas
+    const empty: Record<string, HourlyPoint[]> = {}
+    WEEKDAY_ORDER.forEach((d) => {
+      empty[d] = initEmptyDay()
+    })
+    return empty
+  }, [weeklyReport, timezone])
+
+  const globalBounds = useMemo(
+    () => computeGlobalHourBounds(chartDataByDay),
+    [chartDataByDay]
+  )
+
+  const trimmedByDay = useMemo(() => {
+    const out: Record<string, HourlyPoint[]> = {}
+    for (const dayName of WEEKDAY_ORDER) {
+      out[dayName] = sliceByGlobalBounds(chartDataByDay[dayName], globalBounds)
+    }
+    return out
+  }, [chartDataByDay, globalBounds])
+
+  const domain = useMemo(
+    () => computeDomain(Object.values(trimmedByDay)),
+    [trimmedByDay]
+  )
+  const range: [number, number] = [16, 225]
 
   return (
     <div style={ { width: '100%' } }>
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            name="sunday"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Sunday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data01 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Monday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data02 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Tuesday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data01 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Wednesday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data02 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Thursday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data01 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tick={ { fontSize: 0 } }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Friday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data02 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer width="100%" height={ 60 }>
-        <ScatterChart
-          width={ 800 }
-          height={ 60 }
-          margin={ {
-            top: 10,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          } }
-        >
-          <XAxis
-            type="category"
-            dataKey="hour"
-            name="hour"
-            interval={ 0 }
-            tickLine={ { transform: 'translate(0, -6)' } }
-          />
-          <YAxis
-            type="number"
-            dataKey="index"
-            height={ 10 }
-            width={ 80 }
-            tick={ false }
-            tickLine={ false }
-            axisLine={ false }
-            label={ { value: 'Saturday', position: 'insideRight' } }
-          />
-          <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
-          <Tooltip cursor={ { strokeDasharray: '3 3' } } wrapperStyle={ { zIndex: 100 } }
-            content={ renderTooltip }/>
-          <Scatter data={ data01 } fill="#8884d8"/>
-        </ScatterChart>
-      </ResponsiveContainer>
+      { WEEKDAY_ORDER.map((dayName) => {
+        const data = trimmedByDay[dayName]
+        return (
+          <ResponsiveContainer key={ dayName } width="100%" height={ 60 }>
+            <ScatterChart
+              margin={ {
+                top: 10,
+                right: 0,
+                bottom: 0,
+                left: 0,
+              } }
+            >
+              <XAxis
+                type="category"
+                dataKey="hour"
+                interval={ 0 }
+                tick={ { fontSize: 10 } }
+                tickLine={ { transform: 'translate(0, -6)' } }
+              />
+              <YAxis
+                type="number"
+                dataKey="index"
+                height={ 10 }
+                width={ 80 }
+                tick={ false }
+                tickLine={ false }
+                axisLine={ false }
+                label={ { value: dayName, position: 'insideRight' } }
+              />
+              <ZAxis type="number" dataKey="value" domain={ domain } range={ range }/>
+              <Tooltip
+                cursor={ { strokeDasharray: '3 3' } }
+                wrapperStyle={ { zIndex: 100 } }
+                content={ makeTooltip(dayName) }
+              />
+              <Scatter data={ data } fill="#8884d8"/>
+            </ScatterChart>
+          </ResponsiveContainer>
+        )
+      }) }
     </div>
   )
-}
-
-function renderTooltip ({ active, payload }) {
-  if (active && payload && payload.length) {
-    const data = payload[0] && payload[0].payload
-
-    return (
-      <div
-        style={ {
-          backgroundColor: '#fff',
-          border: '1px solid #999',
-          margin: 0,
-          padding: 10,
-        } }
-      >
-        <p>{ data.hour }</p>
-        <p>
-          <span>value: </span>
-          { data.value }
-        </p>
-      </div>
-    )
-  }
-
-  return null
 }

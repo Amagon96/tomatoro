@@ -5,8 +5,8 @@ import useTranslation from 'next-translate/useTranslation'
 import React, { useCallback } from 'react'
 import DatePicker from 'react-datepicker'
 
-import { ActivityReport } from '~/components/templates/activity-report'
 import { DashboardPage } from '~/components/templates/dashboard-page'
+import { WeeklyActivityReport } from '~/components/templates/weekly-activity-report'
 import { retrieveUser } from '~/utils/supabase/queries/profile.query'
 import { retrieveWeeklyReport, SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 import { createClient } from '~/utils/supabase/server-props'
@@ -56,17 +56,19 @@ export default function DashboardActivityPage ({ date, weeklyReport }: Props) {
     await router.push(`/dashboard/activity/${ nextDate }`)
   }, [])
 
+  console.log('[DEBUG] date', date)
+
   return (
     <DashboardPage subtitle={ t('activity.title') }>
-      <DatePicker
-        selected={ new Date(date) }
-        todayButton="Today"
-        onChange={ updateDate }
-        dateFormat="MM/yyyy"
-        showWeekPicker
-      />
-
-      <ActivityReport report={ weeklyReport }/>
+      <WeeklyActivityReport report={ weeklyReport }>
+        <DatePicker
+          selected={ new Date(date) }
+          todayButton="Today"
+          onChange={ updateDate }
+          dateFormat="MM/yyyy"
+          showWeekPicker
+        />
+      </WeeklyActivityReport>
     </DashboardPage>
   )
 }
