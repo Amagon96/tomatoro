@@ -203,8 +203,8 @@ interface CustomTooltipProps {
 }
 
 const CATEGORY_CONFIG: Record<GapCategory, { display: string; color: string }> = {
-  WORK_TO_WORK: { display: 'Work → Work', color: '#413ea0' },
-  WORK_SHORT_WORK: { display: 'Work → Short → Work', color: '#ff7300' },
+  WORK_TO_WORK: { display: 'Work → Work', color: '#DA3B1B' },
+  WORK_SHORT_WORK: { display: 'Work → Short → Work', color: '#647C46' },
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload }) => {

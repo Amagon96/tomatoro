@@ -236,7 +236,7 @@ export function PomodoroFunnelChart ({ report, timezone = DEFAULT_TIMEZONE }: Pr
           dataKey="count"
           name="Count"
           barSize={ 30 }
-          fill="#413ea0"
+          fill="#647C46"
           yAxisId="left"
           isAnimationActive={ false }
         />
@@ -244,7 +244,7 @@ export function PomodoroFunnelChart ({ report, timezone = DEFAULT_TIMEZONE }: Pr
           type="monotone"
           dataKey="conversion"
           name="Conversion"
-          stroke="#ff7300"
+          stroke="#DA3B1B"
           yAxisId="right"
           dot={ { r: 4 } }
           activeDot={ { r: 6 } }

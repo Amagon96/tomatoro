@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import { useThemeUI } from 'theme-ui'
 
 import type { Segment } from '~/@types/types.db'
 import { SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
@@ -167,12 +168,13 @@ export const BubbleChart: React.FC<Props> = ({
   timezone = Intl.DateTimeFormat().resolvedOptions().timeZone,
   weeklyReport,
 }) => {
+  const { theme } = useThemeUI()
+
   const chartDataByDay = useMemo(() => {
     if (weeklyReport && weeklyReport.length) {
       return buildHourlyData(weeklyReport, timezone)
     }
 
-    // fallback vacío: todas las horas
     const empty: Record<string, HourlyPoint[]> = {}
     WEEKDAY_ORDER.forEach((d) => {
       empty[d] = initEmptyDay()
@@ -236,7 +238,7 @@ export const BubbleChart: React.FC<Props> = ({
                 wrapperStyle={ { zIndex: 100 } }
                 content={ makeTooltip(dayName) }
               />
-              <Scatter data={ data } fill="#8884d8"/>
+              <Scatter data={ data } fill={ theme.colors?.primary as '#fff' }/>
             </ScatterChart>
           </ResponsiveContainer>
         )

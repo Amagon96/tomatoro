@@ -224,7 +224,7 @@ export function ProductiveHoursChart ({
         <Bar
           dataKey="value"
           name={ metric === 'duration' ? 'Duration' : 'Segments' }
-          fill="#413ea0"
+          fill="#647C46"
           isAnimationActive={ false }
         />
       </BarChart>

@@ -60,10 +60,7 @@ const getCreatedAt = (raw: unknown): string | null => {
     return null
   }
   const ca = raw['created_at']
-  if (typeof ca === 'string') {
-    return ca
-  }
-  return null
+  return typeof ca === 'string' ? ca : null
 }
 
 const buildStackedData = (
@@ -91,7 +88,6 @@ const buildStackedData = (
       }
       const utc = parseISO(createdAtStr)
       const zoned = toZonedTime(utc, timezone)
-
       if (zoned.getDate() !== localDay.getDate()) {
         continue
       }
@@ -108,39 +104,45 @@ const buildStackedData = (
   return WEEKDAY_ORDER.map((d) => acc[d])
 }
 
-// Tooltip types
-type TooltipPayloadItem = {
-  dataKey?: string
-  name?: string
+const toPercent = (decimal: number, fixed = 0): string => {
+  const pct = Math.round(decimal * 100 * Math.pow(10, fixed)) / Math.pow(10, fixed)
+  return `${pct}%`
+}
+
+const getPercent = (value: number, total: number, fixed = 2): string => {
+  if (total === 0) {
+    return toPercent(0, fixed)
+  }
+  return toPercent(value / total, fixed)
+}
+
+type TooltipEntry = {
   value?: number
-  payload?: AggregatedDay
+  name?: string
   color?: string
 }
 
 interface CustomTooltipProps {
   active?: boolean
   label?: string
-  payload?: TooltipPayloadItem[]
+  payload?: TooltipEntry[]
 }
 
-const TOOLTIP_ORDER: Array<'WORK' | 'SHORT' | 'LONG'> = ['WORK', 'SHORT', 'LONG']
 const SERIES_CONFIG: Record<string, { display: string; color: string }> = {
   WORK: { display: 'Work', color: '#DA3B1B' },
   SHORT: { display: 'Short', color: '#eab440' },
   LONG: { display: 'Long', color: '#647C46' },
 }
 
+const TOOLTIP_ORDER: Array<'WORK' | 'SHORT' | 'LONG'> = ['WORK', 'SHORT', 'LONG']
+
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload }) => {
   if (!active || !payload || payload.length === 0) {
     return null
   }
 
-  const payloadMap = new Map<string, TooltipPayloadItem>()
-  payload.forEach((p) => {
-    if (p.dataKey) {
-      payloadMap.set(p.dataKey.toUpperCase(), p)
-    }
-  })
+  // Compute total as sum of values present
+  const total = payload.reduce((sum, entry) => sum + (entry.value ?? 0), 0)
 
   return (
     <div
@@ -150,18 +152,18 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload })
         margin: 0,
         padding: 10,
         fontSize: 12,
-        minWidth: 140,
+        minWidth: 160,
       }}
     >
       {label && (
         <div style={{ marginBottom: 6, fontWeight: 600 }}>
-          {label}
+          {label} (Total: {total})
         </div>
       )}
       {TOOLTIP_ORDER.map((key) => {
-        const item = payloadMap.get(key)
         const config = SERIES_CONFIG[key]
-        const value = item?.value ?? 0
+        const entry = payload.find((p) => p.name === config.display)
+        const value = entry?.value ?? 0
         return (
           <div
             key={key}
@@ -169,6 +171,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload })
               display: 'flex',
               alignItems: 'center',
               marginBottom: 4,
+              color: entry?.color ?? config.color,
             }}
           >
             <div
@@ -182,7 +185,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload })
             />
             <div>
               <span style={{ fontWeight: 600 }}>{config.display}: </span>
-              <span>{value}</span>
+              <span>
+                {value} ({getPercent(value, total, 2)})
+              </span>
             </div>
           </div>
         )
@@ -191,7 +196,10 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, label, payload })
   )
 }
 
-export function StackedAreaChart ({ report = [], timezone = DEFAULT_TIMEZONE }: Props) {
+export function PercentStackedAreaChart ({
+  report = [],
+  timezone = DEFAULT_TIMEZONE,
+}: Props) {
   const data: AggregatedDay[] = useMemo(() => {
     if (!report || report.length === 0) {
       return WEEKDAY_ORDER.map((dayName) => ({
@@ -208,6 +216,7 @@ export function StackedAreaChart ({ report = [], timezone = DEFAULT_TIMEZONE }: 
     <ResponsiveContainer width="100%" height={240}>
       <AreaChart
         data={data}
+        stackOffset="expand"
         margin={{
           top: 10,
           right: 30,
@@ -217,7 +226,7 @@ export function StackedAreaChart ({ report = [], timezone = DEFAULT_TIMEZONE }: 
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="day" />
-        <YAxis allowDecimals={false} />
+        <YAxis tickFormatter={(v) => toPercent(Number(v), 0)} />
         <Tooltip content={<CustomTooltip />} />
         {/* stacking: LONG at bottom, then SHORT, then WORK on top */}
         <Area
@@ -249,4 +258,4 @@ export function StackedAreaChart ({ report = [], timezone = DEFAULT_TIMEZONE }: 
   )
 }
 
-StackedAreaChart.displayName = 'StackedAreaChart'
+PercentStackedAreaChart.displayName = 'PercentStackedAreaChart'

@@ -213,29 +213,29 @@ export function ActivityStreakChart ({
         <Area
           type="monotone"
           dataKey="cumulativeSegments"
-          fill="#8884d8"
-          stroke="#8884d8"
+          fill="#eab440"
+          stroke="#eab440"
           name="Cumulative"
           yAxisId="left"
         />
         <Bar
           dataKey="totalSegments"
           barSize={ 20 }
-          fill="#413ea0"
+          fill="#647C46"
           name="Daily segments"
           yAxisId="left"
         />
         <Line
           type="monotone"
           dataKey="streak"
-          stroke="#ff7300"
+          stroke="#DA3B1B"
           name="Streak"
           yAxisId="right"
         />
         <Scatter
           dataKey="active"
           name="Active day"
-          fill="red"
+          fill="#DA3B1B"
           yAxisId="right"
           legendType="circle"
         />

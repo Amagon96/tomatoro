@@ -56,8 +56,6 @@ export default function DashboardActivityPage ({ date, weeklyReport }: Props) {
     await router.push(`/dashboard/activity/${ nextDate }`)
   }, [])
 
-  console.log('[DEBUG] date', date)
-
   return (
     <DashboardPage subtitle={ t('activity.title') }>
       <WeeklyActivityReport report={ weeklyReport }>

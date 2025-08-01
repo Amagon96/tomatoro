@@ -12,7 +12,7 @@ const openSans = Open_Sans({
   subsets: ['latin'],
 })
 
-const maxWidth = '800px'
+const maxWidth = '1000px'
 const colorTransitionAnimationTime = 0.1
 
 export const defaultTheme: Theme = {
@@ -34,6 +34,12 @@ export const defaultTheme: Theme = {
     },
     display: {
       color: 'background',
+      fontFamily: 'monospace',
+      fontSize: '6em',
+      fontWeight: 'bold',
+    },
+    invertedDisplay: {
+      color: 'text',
       fontFamily: 'monospace',
       fontSize: '6em',
       fontWeight: 'bold',
