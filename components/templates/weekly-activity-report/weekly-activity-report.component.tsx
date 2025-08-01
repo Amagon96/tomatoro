@@ -3,6 +3,7 @@ import { Flex } from 'theme-ui'
 
 import { Segment } from '~/@types/types.db'
 import { BubbleChart } from '~/components/organisms/charts/bubble-chart.component'
+import { StackedAreaChart } from '~/components/organisms/charts/stacked-area-chart.component'
 
 interface Props {
   children: ReactNode,
@@ -15,12 +16,14 @@ interface Props {
 export const WeeklyActivityReport = ({ children, report }: Props) => {
   return (
     <>
-      <Flex sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Flex sx={ { justifyContent: 'space-between', alignItems: 'center' } }>
         <h1>Weekly activity report</h1>
         { children }
       </Flex>
 
       <BubbleChart weeklyReport={ report }/>
+
+      <StackedAreaChart report={ report }/>
     </>
   )
 }
