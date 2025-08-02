@@ -99,7 +99,7 @@ export function ProfileStepPage ({ goToNextStep }: WelcomeStepProps) {
             borderColor: 'transparent',
           },
           '& input:checked ~ img': {
-            borderColor: 'primary',
+            borderColor: 'black',
           },
         } }>
           <Label>{ t('welcome.profile.thumbnailLabel') }</Label>
