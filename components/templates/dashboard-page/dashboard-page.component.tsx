@@ -17,7 +17,7 @@ const MENU_ITEMS = [
   },
   {
     label: 'Activity',
-    href: '/dashboard/activity',
+    href: '/dashboard/activity/weekly',
   },
   {
     label: 'Settings',

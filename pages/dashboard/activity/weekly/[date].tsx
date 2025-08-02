@@ -53,7 +53,7 @@ export default function DashboardActivityPage ({ date, weeklyReport }: Props) {
 
   const updateDate = useCallback(async (date: Date | null) => {
     const [nextDate] = (date || new Date()).toISOString().split('T')
-    await router.push(`/dashboard/activity/${ nextDate }`)
+    await router.push(`/dashboard/activity/weekly/${ nextDate }`)
   }, [])
 
   return (

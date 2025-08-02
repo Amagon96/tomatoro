@@ -20,7 +20,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
 
   return {
     redirect: {
-      destination: `/dashboard/activity/${ today }`,
+      destination: `/dashboard/activity/weekly/${ today }`,
       permanent: false,
     },
   }
