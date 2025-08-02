@@ -16,8 +16,12 @@ const MENU_ITEMS = [
     href: '/dashboard',
   },
   {
-    label: 'Activity',
+    label: 'Weekly Activity',
     href: '/dashboard/activity/weekly',
+  },
+  {
+    label: 'Monthly Activity',
+    href: '/dashboard/activity/monthly',
   },
   {
     label: 'Settings',

@@ -12,6 +12,7 @@ import {
 } from 'recharts'
 
 import type { Segment } from '~/@types/types.db'
+import { WEEKDAY_ORDER } from '~/utils/charts'
 import { SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 
 type AggregatedDay = {
@@ -20,16 +21,6 @@ type AggregatedDay = {
   SHORT: number
   LONG: number
 }
-
-const WEEKDAY_ORDER = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-] as const
 
 const DEFAULT_TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone
 

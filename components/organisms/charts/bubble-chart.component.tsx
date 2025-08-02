@@ -13,6 +13,7 @@ import {
 import { useThemeUI } from 'theme-ui'
 
 import type { Segment } from '~/@types/types.db'
+import { WEEKDAY_ORDER } from '~/utils/charts'
 import { SegmentReportBasedOnDays } from '~/utils/supabase/queries/segments.query'
 
 type HourlyPoint = {
@@ -20,16 +21,6 @@ type HourlyPoint = {
   index: number
   value: number
 }
-
-const WEEKDAY_ORDER = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-]
 
 const DEFAULT_START_HOUR = 9
 const DEFAULT_END_HOUR = 17 // 5pm
