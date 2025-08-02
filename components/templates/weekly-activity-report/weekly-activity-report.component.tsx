@@ -84,12 +84,12 @@ export const WeeklyActivityReport = ({ children, report }: Props) => {
       </Flex>
 
       <Flex sx={ { gap: 3 } }>
-        <Card sx={ { width: '60%', px: 3 } }>
+        <Card sx={ { width: '50%', px: 3 } }>
           <Heading as="h3" sx={ { pb: 3 } }>Percentage by type</Heading>
           <PercentStackedAreaChart report={ report }/>
         </Card>
 
-        <Card sx={ { width: '40%', px: 3 } }>
+        <Card sx={ { width: '50%', px: 3 } }>
           <Heading as="h3" sx={ { pb: 3 } }>Global breakdown</Heading>
           <SegmentTypePieChart report={ report }/>
         </Card>

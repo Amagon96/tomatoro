@@ -41,7 +41,7 @@ export const defaultTheme: Theme = {
     invertedDisplay: {
       color: 'text',
       fontFamily: 'monospace',
-      fontSize: '6em',
+      fontSize: '4em',
       fontWeight: 'bold',
     },
     title: {
@@ -204,7 +204,7 @@ export const defaultTheme: Theme = {
   cards: {
     primary: {
       padding: 4,
-      borderRadius: 2,
+      borderRadius: 16,
       border: '1px solid #ddd',
     },
     widget: {
