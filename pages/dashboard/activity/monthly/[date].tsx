@@ -4,8 +4,9 @@ import { router } from 'next/client'
 import useTranslation from 'next-translate/useTranslation'
 import React, { useCallback } from 'react'
 import DatePicker from 'react-datepicker'
-import { Card, Flex, Heading } from 'theme-ui'
+import { Box, Card, Flex, Heading, Paragraph } from 'theme-ui'
 
+import { Tooltip } from '~/components/atoms/tooltip'
 import { FocusStreakChart } from '~/components/organisms/charts/monthly/focus-streak-chart.component'
 import { DashboardPage } from '~/components/templates/dashboard-page'
 import { retrieveUser } from '~/utils/supabase/queries/profile.query'
@@ -75,7 +76,29 @@ export default function DashboardActivityPage ({ date, report }: Props) {
       </Flex>
 
       <Card>
-        <Heading as="h3" sx={ { pb: 3 } }>Hourly activity by week day</Heading>
+        <Heading as="h3" sx={ { pb: 3 } }>Focus Streak</Heading>
+        <Tooltip
+          content={(
+            <Paragraph variant="inverted">
+              This chart shows the longest streak of consecutive days with focus. Keep your streaks going to build
+              habits and consistency. Weekends won&apos;t break the streak.
+            </Paragraph>
+          )}
+          placement="top">
+          <Box
+            as="span"
+            aria-label="info"
+            sx={ {
+              display: 'inline-block',
+              ml: 1,
+              cursor: 'help',
+              fontSize: 1,
+              lineHeight: 1,
+            } }
+          >
+            ℹ️
+          </Box>
+        </Tooltip>
         <FocusStreakChart report={ report }/>
       </Card>
     </DashboardPage>
