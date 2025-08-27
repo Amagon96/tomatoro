@@ -12,7 +12,7 @@ const openSans = Open_Sans({
   subsets: ['latin'],
 })
 
-const maxWidth = '800px'
+const maxWidth = '1000px'
 const colorTransitionAnimationTime = 0.1
 
 export const defaultTheme: Theme = {
@@ -36,6 +36,12 @@ export const defaultTheme: Theme = {
       color: 'background',
       fontFamily: 'monospace',
       fontSize: '6em',
+      fontWeight: 'bold',
+    },
+    invertedDisplay: {
+      color: 'text',
+      fontFamily: 'monospace',
+      fontSize: '4em',
       fontWeight: 'bold',
     },
     title: {
@@ -198,7 +204,7 @@ export const defaultTheme: Theme = {
   cards: {
     primary: {
       padding: 4,
-      borderRadius: 2,
+      borderRadius: 16,
       border: '1px solid #ddd',
     },
     widget: {

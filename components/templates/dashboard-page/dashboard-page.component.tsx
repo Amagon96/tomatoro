@@ -16,8 +16,12 @@ const MENU_ITEMS = [
     href: '/dashboard',
   },
   {
-    label: 'Activity',
-    href: '/dashboard/activity',
+    label: 'Weekly Activity',
+    href: '/dashboard/activity/weekly',
+  },
+  {
+    label: 'Monthly Activity',
+    href: '/dashboard/activity/monthly',
   },
   {
     label: 'Settings',
@@ -60,7 +64,7 @@ export const DashboardPage: FC<PropsWithChildren<DashboardPageProps>> = ({
           <Avatar src={ derivedState.thumbnail.src } sx={ { backgroundColor: 'white' } }/>
         </Flex>
       </Flex>
-      <Grid variant="contained" sx={ { justifyItems: 'start', pb: 5 } }>
+      <Grid variant="contained" sx={ { justifyItems: 'stretch', pb: 5 } }>
         { children }
       </Grid>
     </Page>

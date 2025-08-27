@@ -1,6 +1,15 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { eachDayOfInterval, endOfMonth, format, isSameDay, parseISO, startOfMonth } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  isSameDay,
+  parseISO,
+  startOfMonth,
+  startOfWeek,
+  endOfWeek,
+} from 'date-fns'
+import { fromZonedTime, toZonedTime } from 'date-fns-tz'
 
 import { Segment } from '~/@types/types.db'
 import { SegmentType } from '~/utils/config'
@@ -25,7 +34,7 @@ export async function createSegment (supabase: SupabaseClient, type: SegmentType
   }
 }
 
-export type WeeklyReport = Array<{
+export type SegmentReportBasedOnDays = Array<{
   day: string,
   segments: Array<Segment>
 }>
@@ -57,6 +66,51 @@ export async function retrieveMonthlyReport (
   }
 
   return eachDayOfInterval({ start: from, end: to }).map(localDate => {
+    const segments = (data ?? []).filter(seg => {
+      const utc = parseISO(seg.created_at)
+      const local = toZonedTime(utc, timezone)
+      return isSameDay(local, localDate)
+    })
+
+    return {
+      day: format(localDate, 'yyyy-MM-dd'),
+      segments,
+    }
+  })
+}
+
+export async function retrieveWeeklyReport (
+  supabase: SupabaseClient,
+  referenceDate: Date | string = new Date(),
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+): Promise<SegmentReportBasedOnDays> {
+  const { data: userData, error: userError } = await supabase.auth.getUser()
+
+  if (userError || !userData.user) {
+    throw userError || new Error('User not found')
+  }
+
+  const ref = typeof referenceDate === 'string' ? new Date(referenceDate) : referenceDate
+
+  const zonedRef = toZonedTime(ref, timezone)
+  const weekStartLocal = startOfWeek(zonedRef, { weekStartsOn: 0 })
+  const weekEndLocal = endOfWeek(zonedRef, { weekStartsOn: 0 })
+
+  const from = fromZonedTime(weekStartLocal, timezone)
+  const to = fromZonedTime(weekEndLocal, timezone)
+
+  const { data, error } = await supabase
+    .from('segments')
+    .select('*')
+    .eq('user_id', userData.user.id)
+    .gte('created_at', from.toISOString())
+    .lte('created_at', to.toISOString())
+
+  if (error) {
+    throw error
+  }
+
+  return eachDayOfInterval({ start: weekStartLocal, end: weekEndLocal }).map(localDate => {
     const segments = (data ?? []).filter(seg => {
       const utc = parseISO(seg.created_at)
       const local = toZonedTime(utc, timezone)
