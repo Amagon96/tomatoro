@@ -12,7 +12,7 @@ export const Backdrop = styled(motion.div)`
   z-index: 99;
 `
 
-export const MotionModal = styled(motion.div)`
+export const MotionModal = styled(motion.div)<{ dark?: boolean }>`
   position: absolute;
   top: 0;
   left: 50%;
@@ -26,8 +26,8 @@ export const MotionModal = styled(motion.div)`
   max-width: 420px;
   height: auto;
   padding: 2em 3em;
-  border: 1px solid #ddd;
-  background: #fff;
+  border: 1px solid ${(props) => (props.dark ? '#444444' : '#dddddd')};
+  background-color: ${(props) => (props.dark ? '#121212' : '#fff')};
 `
 
 export const CloseButton = styled(Close)`

@@ -18,10 +18,12 @@ interface Props {
     message?: string
   }
   children?: React.ReactNode
+  dark?: boolean
 }
 
 const ModalComponent: FC<Props> = ({
   children,
+  dark,
   data,
   setToggled,
   show,
@@ -52,6 +54,7 @@ const ModalComponent: FC<Props> = ({
         <>
           <Backdrop/>
           <MotionModal
+            dark={dark}
             ref={ modalRef }
             initial={ { y: 10, x: '-50%', opacity: 0 } }
             animate={ { y: 50, opacity: 1 } }

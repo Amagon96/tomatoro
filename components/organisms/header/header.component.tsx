@@ -110,7 +110,7 @@ export const Header = () => {
   }
 
   return (
-    <Container as="header" sx={ { borderColor: 'muted' } }>
+    <Container as="header" sx={ { borderColor: 'primary' } }>
       <Flex variant="styles.contained" sx={ { justifyContent: 'space-between', alignItems: 'center' } }>
         {/* Left: logo + links (desktop only) */ }
         <Flex sx={ { alignItems: 'center', gap: 3 } }>

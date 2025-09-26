@@ -10,6 +10,7 @@ import {
   Slider,
   Switch,
 } from 'theme-ui'
+import { useLocalStorage } from 'usehooks-ts'
 
 import { LanguageSelector } from '~/components/molecules/language-selector'
 import { Modal } from '~/components/organisms/modal'
@@ -53,10 +54,12 @@ export const Settings: FC<Props> = ({ children }) => {
     })
   }
 
+  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light')
+
   return (
     <>
       { children?.(toggleModal) }
-      <Modal show={ showModal } setToggled={ toggleModal }>
+      <Modal show={ showModal } setToggled={ toggleModal } dark={theme === 'dark'}>
         <Flex sx={ { alignItems: 'center', flexDirection: 'column', gap: 2 } }>
           <Heading as="h2" variant="text.title" sx={ { textAlign: 'center' } }>
             { t('settings.title') }
@@ -115,6 +118,12 @@ export const Settings: FC<Props> = ({ children }) => {
             checked={ showNotifications }
             onChange={ (e) =>
               onAppSettingChange('showNotifications', e.target.checked) }
+          />
+
+          <Switch
+            label={ t('settings.darkMode') }
+            checked={ theme === 'dark' }
+            onChange={ (e) => setTheme(e.target.checked ? 'dark' : 'light') }
           />
 
           <Flex sx={ { alignItems: 'center', gap: 3 } }>

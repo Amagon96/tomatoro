@@ -6,6 +6,7 @@
     "short": "Duración del descanso corto:",
     "long": "Duración del descanso largo:",
     "timerOnTitle": "Mostrar temporizador en el título",
+    "darkMode": "Usar modo oscuro",
     "showNotifications": "Mostrar notificación cuando el temporizador termine",
     "language": "Idioma de la página",
     "cta": {

@@ -38,6 +38,7 @@ export const Timer: FC = () => {
       maxWidth: 768,
       position: 'relative',
       width: ['calc(100vw - 2rem)', 'auto'],
+      color: 'white',
     } }>
       <Image
         priority
@@ -45,7 +46,9 @@ export const Timer: FC = () => {
         alt=""
         aria-hidden
       />
-      <Text variant="display">
+      <Text variant="display" sx={{
+        color: 'white',
+      }}>
         { formatTime(time) }
       </Text>
       <Controls>
@@ -54,14 +57,25 @@ export const Timer: FC = () => {
           onClick={ onStopClick }
           disabled={ !isStarted }
           data-tracking-id="button-timer-done"
-        >
+          sx={{
+            color: '#DA3B1B',
+            bg: '#ffffff',
+            '&:disabled': {
+              color: 'white', // force white
+              bg: 'transparent',
+              cursor: 'not-allowed',
+            },
+          }}>
           { t('done') }
         </Button>
         <Button
           variant="action"
           onClick={ onToggleClick }
           data-tracking-id={ isRunning ? 'button-timer-pause' : 'button-timer-start' }
-        >
+          sx={{
+            color: '#DA3B1B',
+            bg: '#ffffff',
+          }}>
           { isRunning ? t('pause') : t('start') }
         </Button>
       </Controls>
